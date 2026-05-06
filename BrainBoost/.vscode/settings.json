@@ -1,0 +1,7 @@
+{
+    "github.copilot.chat.commitMessageGeneration.instructions": [
+        {
+            "text": "Be extremely detailed about the changes and save it as bullet points, add emojis for each part"
+        }
+    ]
+}
