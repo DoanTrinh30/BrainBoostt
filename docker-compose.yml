@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: brainboost-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: dong
+      POSTGRES_DB: brainboost
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - brainboost-network
+    restart: unless-stopped
+
+  redis: 
+    image: redis:7.4
+    container_name: brainboost-redis
+    volumes:
+      - redis_data:/data
+    networks:
+      - brainboost-network
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=dong
+    ports:
+      - "6380:6379"
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./BrainBoost-backend
+      dockerfile: Dockerfile
+    container_name: brainboost-backend
+    environment:
+      - PORT=3000
+      - JWT_SECRET=your_jwt_secret_here
+      - JWT_EXPIRATION=86400
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=dong
+      - DATABASE_NAME=brainboost
+      - SALT_ROUNDS=1
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    networks:
+      - brainboost-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  brainboost-network:
+    driver: bridge
