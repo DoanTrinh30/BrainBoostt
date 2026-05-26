@@ -1,0 +1,21 @@
+# Python venv
+brainboost-ml/venv/
+BrainBoost-backend/node_modules/
+BrainBoost/node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
