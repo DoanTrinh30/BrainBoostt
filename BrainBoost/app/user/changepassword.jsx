@@ -44,8 +44,8 @@ export default function ChangePassword() {
         onSuccess: () => {
             Toast.show({
                 type: 'success',
-                text1: 'Success',
-                text2: 'Password updated successfully!',
+                text1: 'Thành công',
+                text2: 'Đổi mật khẩu thành công!',
                 position: 'top',
             })
             router.back()
@@ -53,10 +53,10 @@ export default function ChangePassword() {
         onError: (error) => {
             Toast.show({
                 type: 'error',
-                text1: 'Update Failed',
+                text1: 'Đổi mật khẩu thất bại',
                 text2:
                     error.message ||
-                    'Failed to update password. Please try again later.',
+                    'Không thể đổi mật khẩu. Vui lòng thử lại sau.',
                 position: 'top',
             })
         },
@@ -80,7 +80,7 @@ export default function ChangePassword() {
                     <TouchableOpacity onPress={() => router.back()}>
                         <Icon name="arrow-left" size={24} color="#000" />
                     </TouchableOpacity>
-                    <Text style={styles.headerTitle}>Change Password</Text>
+                    <Text style={styles.headerTitle}>Đổi mật khẩu</Text>
                     <TouchableOpacity
                         onPress={handleSubmit(onSubmit)}
                         disabled={changePasswordMutation.isPending}
@@ -98,11 +98,11 @@ export default function ChangePassword() {
                         control={control}
                         name="current_password"
                         rules={{
-                            required: 'Current password is required',
+                            required: 'Vui lòng nhập mật khẩu hiện tại',
                         }}
                         render={({ field: { onChange, value } }) => (
                             <FormFieldEdit
-                                label="Current Password"
+                                label="Mật khẩu hiện tại"
                                 name="current_password"
                                 type={showPassword ? 'text' : 'password'}
                                 value={value}
@@ -126,16 +126,16 @@ export default function ChangePassword() {
                         control={control}
                         name="new_password"
                         rules={{
-                            required: 'New password is required',
+                            required: 'Vui lòng nhập mật khẩu mới',
                             pattern: {
                                 value: /^(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,}$/,
                                 message:
-                                    'Password must be at least 8 characters, include a number and a special character.',
+                                    'Mật khẩu phải có ít nhất 8 ký tự, bao gồm 1 số và 1 ký tự đặc biệt.',
                             },
                         }}
                         render={({ field: { onChange, value } }) => (
                             <FormFieldEdit
-                                label="New Password"
+                                label="Mật khẩu mới"
                                 name="new_password"
                                 type={showPassword ? 'text' : 'password'}
                                 value={value}

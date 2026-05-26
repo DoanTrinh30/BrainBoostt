@@ -2,6 +2,7 @@ import React from "react";
 import { ScrollView, View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { formatDistanceToNow } from "date-fns";
+import { vi } from "date-fns/locale";
 import { CARD_WIDTH } from "../../constants/sizes";
 
 const ContentCarousel = ({ 
@@ -28,7 +29,7 @@ const ContentCarousel = ({
         switch (type) {
             case 'class':
             case 'folder':
-                return `${item.studentQuantity} students`;
+                return `${item.studentQuantity} học viên`;
             case 'deck':
                 return item.description;
             default:
@@ -83,7 +84,7 @@ const ContentCarousel = ({
         >
             {items.map((item, index) => {
                 const isActive = index === selectedIndex;
-                const lastUpdated = formatDistanceToNow(new Date(item.updatedAt), { addSuffix: true });
+                const lastUpdated = formatDistanceToNow(new Date(item.updatedAt), { addSuffix: true, locale: vi });
 
                 return (
                     <TouchableOpacity
@@ -100,7 +101,7 @@ const ContentCarousel = ({
                             />
                             {type === 'deck' && (
                                 <Text style={styles.visibilityText}>
-                                    {item.visibility === "private" ? "Private" : "Public"}
+                                    {item.visibility === "private" ? "Riêng tư" : "Công khai"}
                                 </Text>
                             )}
                         </View>
@@ -145,7 +146,7 @@ const ContentCarousel = ({
                             type === 'folder' && styles.folderFooter,
                         ]}>
                             <Text style={styles.timeText}>
-                                Updated {lastUpdated}
+                                Cập nhật {lastUpdated}
                             </Text>
                         </View>
                     </TouchableOpacity>
@@ -301,4 +302,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default ContentCarousel; 
+export default ContentCarousel;

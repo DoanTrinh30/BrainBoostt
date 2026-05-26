@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useRouter, useLocalSearchParams } from 'expo-router'
 import {
     View,
@@ -16,6 +16,9 @@ import {
     setFlashcards,
     clearFlashcards,
 } from '../../redux/slices/flashcardSlice'
+// ===== ML INTEGRATION =====
+import { createReviewLog } from '../../services/reviewLogService'
+
 const { width, height } = Dimensions.get('window')
 
 const FlashcardScreen = () => {
@@ -39,6 +42,9 @@ const FlashcardScreen = () => {
     })
     const [swipeCount, setSwipeCount] = useState(0)
 
+    // ===== ML: Track thời gian hiện mỗi card =====
+    const cardShownAtRef = useRef(Date.now())
+
     let flashcards = []
     try {
         flashcards = JSON.parse(flashcardsString || '[]')
@@ -46,8 +52,46 @@ const FlashcardScreen = () => {
         console.error('Failed to parse flashcards data:', e)
     }
 
+    /**
+     * Log review vào backend (gọi ML predict ngầm).
+     * Dùng fire-and-forget pattern: không block UI, không alert error.
+     */
+    const logReviewToML = async (flashcard, isCorrect) => {
+        try {
+            // Tính response time (ms)
+            const responseTimeMs = Date.now() - cardShownAtRef.current
+
+            // Gọi API (không await, không block UI)
+            const result = await createReviewLog({
+                flashcardId: flashcard.id,
+                isCorrect,
+                responseTimeMs,
+                difficulty: 'medium', // có thể tính từ frontText length nếu muốn
+            })
+
+            // Log để debug — sau này có thể bỏ
+            console.log(
+                `[ML] Card "${flashcard.frontText}" → ${isCorrect ? '✓' : '✗'} | ` +
+                `Retention: ${(result.prediction.retentionProbability * 100).toFixed(1)}% | ` +
+                `Next review: ${result.prediction.nextReviewDays} days`
+            )
+        } catch (error) {
+            // Không show error cho user — log review là tính năng nền
+            console.warn('[ML] Failed to log review:', error.message)
+        }
+    }
+
     const handleSwipe = (flashcard, direction) => {
         setSwipeCount((prev) => prev + 1)
+
+        const isCorrect = direction === 'right'
+
+        // ===== ML: Log review ngầm (không await để không block UI) =====
+        logReviewToML(flashcard, isCorrect)
+
+        // Reset timer cho card tiếp theo
+        cardShownAtRef.current = Date.now()
+
         if (direction === 'right') {
             setFlashcardsLearned((prev) => ({
                 ...prev,
@@ -107,7 +151,7 @@ const FlashcardScreen = () => {
                     >
                         <Ionicons name="arrow-back" size={24} color="#333" />
                     </TouchableOpacity>
-                    <Text style={styles.title}>{deckName || 'Flashcards'}</Text>
+                    <Text style={styles.title}>{deckName || 'Học thẻ'}</Text>
                     <View style={{ width: 24 }} />
                 </View>
 
@@ -160,7 +204,7 @@ const FlashcardScreen = () => {
                     </View>
                 ) : (
                     <Text style={styles.noCardsText}>
-                        No flashcards available for this deck.
+                        Bộ thẻ này chưa có thẻ nào.
                     </Text>
                 )}
             </View>

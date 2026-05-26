@@ -14,6 +14,8 @@ import QuestionHeader from '../../components/containers/QuestionHeader'
 import AnswerOption from '../../components/containers/AnswerOption'
 import ProgressBar from '../../components/containers/ProgressBar'
 import { SafeAreaView } from 'react-native-safe-area-context'
+// ===== ML INTEGRATION =====
+import { createReviewLog } from '../../services/reviewLogService'
 
 const shuffleArray = (array) => {
     const newArray = [...array]
@@ -38,6 +40,10 @@ const LearnScreen = () => {
         correctCount: 0,
     })
 
+    // ===== ML: Track thời gian hiện mỗi question =====
+    const questionShownAtRef = useRef(Date.now())
+    const hintUsedRef = useRef(false)
+
     useEffect(() => {
         if (flashcards && data) {
             try {
@@ -46,7 +52,6 @@ const LearnScreen = () => {
 
                 // Process and combine flashcards with distractors
                 const combinedData = parsedData.map((item, index) => {
-                    // Create an array with correct answer and distractors
                     const options = shuffleArray(
                         item.options
                             ? [...item.options]
@@ -54,6 +59,8 @@ const LearnScreen = () => {
                     )
 
                     return {
+                        // ===== ML: Giữ lại flashcard ID để log =====
+                        flashcardId: item.flashcardId || item.id || parsedFlashcards[index]?.id,
                         question: item.question,
                         options,
                         correctAnswer: item.answer,
@@ -62,7 +69,6 @@ const LearnScreen = () => {
 
                 setProcessedData(combinedData)
 
-                // Reset state
                 setState({
                     currentIndex: 0,
                     selectedOption: null,
@@ -71,6 +77,7 @@ const LearnScreen = () => {
                     correctCount: 0,
                 })
                 fadeAnim.setValue(0)
+                questionShownAtRef.current = Date.now()
             } catch (error) {
                 console.error('Failed to parse data:', error)
             }
@@ -84,12 +91,12 @@ const LearnScreen = () => {
                     <TouchableOpacity onPress={() => router.back()}>
                         <Ionicons name="close" size={28} color="#333" />
                     </TouchableOpacity>
-                    <Text style={styles.headerTitle}>Learn</Text>
+                    <Text style={styles.headerTitle}>Luyện tập</Text>
                     <View style={{ width: 28 }} />
                 </View>
                 <View style={[styles.centerContent]}>
                     <Text style={styles.noCardsText}>
-                        Loading flashcards...
+                        Đang tải thẻ học...
                     </Text>
                 </View>
             </SafeAreaView>
@@ -100,16 +107,55 @@ const LearnScreen = () => {
     const isFinished =
         state.currentIndex === processedData.length - 1 && state.isAnswered
 
+    /**
+     * Log review vào backend (fire-and-forget).
+     */
+    const logReviewToML = async (flashcardId, isCorrect, usedHint) => {
+        if (!flashcardId) {
+            console.warn('[ML] Skip log: no flashcardId')
+            return
+        }
+
+        try {
+            const responseTimeMs = Date.now() - questionShownAtRef.current
+
+            // Nếu dùng hint → coi như "hard" (khó), không dùng hint → medium
+            const difficulty = usedHint ? 'hard' : 'medium'
+
+            const result = await createReviewLog({
+                flashcardId,
+                isCorrect,
+                responseTimeMs,
+                difficulty,
+            })
+
+            console.log(
+                `[ML] Quiz "${currentCard.question.substring(0, 30)}..." → ${isCorrect ? '✓' : '✗'} | ` +
+                `Retention: ${(result.prediction.retentionProbability * 100).toFixed(1)}%`
+            )
+        } catch (error) {
+            console.warn('[ML] Failed to log review:', error.message)
+        }
+    }
+
     const handleOptionPress = (option) => {
         if (!state.isAnswered) {
+            const isCorrect = option === currentCard.correctAnswer
+
+            // ===== ML: Log review ngầm =====
+            logReviewToML(
+                currentCard.flashcardId,
+                isCorrect,
+                hintUsedRef.current
+            )
+
             setState((prev) => ({
                 ...prev,
                 selectedOption: option,
                 isAnswered: true,
-                correctCount:
-                    option === currentCard.correctAnswer
-                        ? prev.correctCount + 1
-                        : prev.correctCount,
+                correctCount: isCorrect
+                    ? prev.correctCount + 1
+                    : prev.correctCount,
             }))
         }
     }
@@ -124,6 +170,9 @@ const LearnScreen = () => {
                 showHint: false,
             }))
             fadeAnim.setValue(0)
+            // ===== ML: Reset timer + hint flag cho question mới =====
+            questionShownAtRef.current = Date.now()
+            hintUsedRef.current = false
         }
     }
 
@@ -138,6 +187,8 @@ const LearnScreen = () => {
             })
         } else {
             setState((prev) => ({ ...prev, showHint: true }))
+            // ===== ML: Đánh dấu user đã dùng hint =====
+            hintUsedRef.current = true
             Animated.timing(fadeAnim, {
                 toValue: 1,
                 duration: 500,
@@ -166,7 +217,7 @@ const LearnScreen = () => {
                 <TouchableOpacity onPress={() => router.back()}>
                     <Ionicons name="close" size={28} color="#333" />
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>{deckName || 'Learn'}</Text>
+                <Text style={styles.headerTitle}>{deckName || 'Luyện tập'}</Text>
                 <View style={{ width: 28 }} />
             </View>
 
@@ -191,7 +242,7 @@ const LearnScreen = () => {
                         style={[styles.hintBox, { opacity: fadeAnim }]}
                     >
                         <Text style={styles.hintText}>
-                            Hint: {currentCard.correctAnswer}
+                            Gợi ý: {currentCard.correctAnswer}
                         </Text>
                     </Animated.View>
                 )}
@@ -220,7 +271,7 @@ const LearnScreen = () => {
                 {state.isAnswered && (
                     <SubmitButton
                         onPress={isFinished ? handleFinish : handleNext}
-                        text={isFinished ? 'Finish' : 'Next'}
+                        text={isFinished ? 'Hoàn thành' : 'Tiếp theo'}
                     />
                 )}
             </ScrollView>

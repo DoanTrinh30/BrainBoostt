@@ -1,25 +1,46 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import React from 'react'
+import {
+    View,
+    Text,
+    StyleSheet,
+    TouchableOpacity,
+    Image,
+} from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
+import { useRouter } from 'expo-router'
 
 const HomeHeader = ({ userData }) => {
-    const router = useRouter();
+    const router = useRouter()
+
+    const avatarUri =
+        userData?.avatar_url ||
+        'https://ui-avatars.com/api/?name=' +
+            encodeURIComponent(userData?.name || 'User') +
+            '&background=3D5CFF&color=fff'
+
+    const displayName = userData?.name || 'bạn'
 
     return (
         <View style={styles.headerContainer}>
             {/* Search and Profile Row */}
             <View style={styles.topRow}>
-                <TouchableOpacity 
-                    onPress={() => router.push('/search/searchpage')} 
+                <TouchableOpacity
+                    onPress={() => router.push('/search/searchpage')}
                     style={styles.searchContainer}
                 >
-                    <Ionicons name="search" size={24} color="#666" style={{ marginLeft: 12 }} />
-                    <Text style={styles.searchInput}>Search everything</Text>
+                    <Ionicons
+                        name="search"
+                        size={24}
+                        color="#666"
+                        style={{ marginLeft: 12 }}
+                    />
+                    <Text style={styles.searchInput}>Tìm kiếm...</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => router.push('/bottom/profile')}>
-                    <Image 
-                        source={{ uri: 'https://picsum.photos/200' }}
+                <TouchableOpacity
+                    onPress={() => router.push('/bottom/profile')}
+                >
+                    <Image
+                        source={{ uri: avatarUri }}
                         style={styles.profileImage}
                     />
                 </TouchableOpacity>
@@ -27,12 +48,14 @@ const HomeHeader = ({ userData }) => {
 
             {/* Greeting Section */}
             <View style={styles.greetingContainer}>
-                <Text style={styles.greeting}>Hi, {userData.name}</Text>
-                <Text style={styles.subGreeting}>Ready to boost your vocabulary?</Text>
+                <Text style={styles.greeting}>Xin chào, {displayName}</Text>
+                <Text style={styles.subGreeting}>
+                    Sẵn sàng nâng cấp vốn từ chưa?
+                </Text>
             </View>
         </View>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     headerContainer: {
@@ -71,9 +94,9 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         borderWidth: 2,
         borderColor: '#3D5CFF',
+        backgroundColor: '#E0E0E0',
     },
-    greetingContainer: {
-    },
+    greetingContainer: {},
     greeting: {
         fontSize: 28,
         fontWeight: 'bold',
@@ -85,6 +108,6 @@ const styles = StyleSheet.create({
         color: '#666',
         letterSpacing: 0.3,
     },
-});
+})
 
-export default HomeHeader;
+export default HomeHeader

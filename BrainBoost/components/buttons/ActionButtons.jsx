@@ -4,8 +4,8 @@ import SubmitButton from "./SubmitButton";
 
 const ActionButtons = ({ handleSignUp, handleLogin }) => (
     <View style={styles.buttonsContainer}>
-        <SubmitButton text="Sign Up" onPress={handleSignUp} style={styles.signUpButton} />
-        <SubmitButton text="Log In" onPress={handleLogin} style={styles.logInButton} textStyle={{ color: "#3D5CFF" }} />
+        <SubmitButton text="Đăng Ký" onPress={handleSignUp} style={styles.signUpButton} />
+        <SubmitButton text="Đăng Nhập" onPress={handleLogin} style={styles.logInButton} textStyle={{ color: "#3D5CFF" }} />
     </View>
 );
 

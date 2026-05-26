@@ -13,11 +13,11 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import TabContent from '../../components/containers/TabContent'
 
-const TABS = ['All results', 'Decks', 'Classes', 'Folders', 'Users']
+const TABS = ['Tất cả', 'Bộ thẻ', 'Lớp học', 'Thư mục', 'Người dùng']
 
 export default function SearchPage() {
     const [searchQuery, setSearchQuery] = useState('')
-    const [activeTab, setActiveTab] = useState('All results')
+    const [activeTab, setActiveTab] = useState('Tất cả')
 
     const router = useRouter()
 
@@ -42,7 +42,7 @@ export default function SearchPage() {
                     />
                     <TextInput
                         style={styles.searchInput}
-                        placeholder="Search for decks..."
+                        placeholder="Tìm bộ thẻ..."
                         value={searchQuery}
                         onChangeText={(text) => setSearchQuery(text ?? '')}
                     />

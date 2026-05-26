@@ -42,7 +42,6 @@ const AddDeckScreen = () => {
                     definition: card.back_text || card.definition || '',
                 }))
             } catch (e) {
-                // fallback to default
                 flashcards = [
                     { id: 1, term: '', definition: '' },
                     { id: 2, term: '', definition: '' },
@@ -58,11 +57,9 @@ const AddDeckScreen = () => {
         }
     })
 
-    // Create deck mutation
     const createDeckMutation = useMutation({
         mutationFn: (deckData) => createDeck(deckData),
         onSuccess: (data) => {
-            // After deck is created successfully, add flashcards
             const validFlashcards = deckInfo.flashcards.filter(
                 (card) =>
                     card.term.trim() !== '' && card.definition.trim() !== '',
@@ -74,18 +71,13 @@ const AddDeckScreen = () => {
                     flashcards: validFlashcards,
                 })
             } else {
-                // If no valid flashcards, just show success and navigate
                 Toast.show({
                     type: 'success',
-                    text1: 'Deck created successfully!',
+                    text1: 'Tạo bộ thẻ thành công!',
                     position: 'top',
                 })
-
-                // Invalidate queries to refresh data
                 queryClient.invalidateQueries({ queryKey: ['decks'] })
                 queryClient.invalidateQueries({ queryKey: ['homeData'] })
-
-                // Navigate back to decks screen
                 router.push('/bottom/decks')
             }
         },
@@ -93,41 +85,34 @@ const AddDeckScreen = () => {
             console.error('Error creating deck:', error)
             Toast.show({
                 type: 'error',
-                text1: 'Failed to create deck',
-                text2: error.message || 'Please try again later',
+                text1: 'Không thể tạo bộ thẻ',
+                text2: error.message || 'Vui lòng thử lại sau',
                 position: 'top',
             })
         },
     })
 
-    // Create flashcards mutation
     const createFlashcardsMutation = useMutation({
         mutationFn: ({ deckId, flashcards }) =>
             createFlashcards(deckId, flashcards),
         onSuccess: () => {
             Toast.show({
                 type: 'success',
-                text1: 'Deck with flashcards created successfully!',
+                text1: 'Tạo bộ thẻ và thẻ học thành công!',
                 position: 'top',
             })
-
-            // Invalidate queries to refresh data
             queryClient.invalidateQueries({ queryKey: ['decks'] })
             queryClient.invalidateQueries({ queryKey: ['homeData'] })
-
-            // Navigate back to decks screen
             router.push('/bottom/decks')
         },
         onError: (error) => {
             console.error('Error creating flashcards:', error)
             Toast.show({
                 type: 'error',
-                text1: 'Deck created but failed to add flashcards',
-                text2: error.message || 'Please try again later',
+                text1: 'Bộ thẻ đã tạo nhưng thêm thẻ thất bại',
+                text2: error.message || 'Vui lòng thử lại sau',
                 position: 'top',
             })
-
-            // Still navigate back since deck was created
             router.push('/bottom/decks')
         },
     })
@@ -136,8 +121,8 @@ const AddDeckScreen = () => {
         if (!validateDeckData(deckInfo)) {
             Toast.show({
                 type: 'error',
-                text1: 'Error',
-                text2: 'Please enter a valid title and description.',
+                text1: 'Lỗi',
+                text2: 'Vui lòng nhập tiêu đề và mô tả hợp lệ.',
                 position: 'top',
             })
             return
@@ -157,7 +142,6 @@ const AddDeckScreen = () => {
 
     return (
         <View style={styles.container}>
-            {/* Header */}
             <View style={styles.header}>
                 <TouchableOpacity
                     onPress={() => router.back()}
@@ -165,17 +149,16 @@ const AddDeckScreen = () => {
                 >
                     <Ionicons name="arrow-back" size={24} color="#333" />
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>Add Deck</Text>
+                <Text style={styles.headerTitle}>Tạo bộ thẻ</Text>
                 <View style={{ width: 24 }} />
             </View>
 
             <ScrollView contentContainerStyle={styles.scrollContainer}>
-                {/* Title and Description */}
                 <View style={styles.inputGroup}>
-                    <Text style={styles.inputLabel}>Title</Text>
+                    <Text style={styles.inputLabel}>Tiêu đề</Text>
                     <TextInput
                         style={styles.input}
-                        placeholder="Enter deck title"
+                        placeholder="Nhập tiêu đề bộ thẻ"
                         value={deckInfo.title}
                         onChangeText={(text) =>
                             setDeckInfo((prev) => ({ ...prev, title: text }))
@@ -184,10 +167,10 @@ const AddDeckScreen = () => {
                 </View>
 
                 <View style={styles.inputGroup}>
-                    <Text style={styles.inputLabel}>Description</Text>
+                    <Text style={styles.inputLabel}>Mô tả</Text>
                     <TextInput
                         style={[styles.input, styles.descriptionInput]}
-                        placeholder="Enter deck description"
+                        placeholder="Nhập mô tả bộ thẻ"
                         value={deckInfo.description}
                         onChangeText={(text) =>
                             setDeckInfo((prev) => ({
@@ -200,7 +183,7 @@ const AddDeckScreen = () => {
                 </View>
 
                 <View style={styles.inputGroup}>
-                    <Text style={styles.inputLabel}>Visibility</Text>
+                    <Text style={styles.inputLabel}>Quyền riêng tư</Text>
                     <TouchableOpacity
                         style={[
                             styles.visibilitySelector,
@@ -232,14 +215,13 @@ const AddDeckScreen = () => {
                             ]}
                         >
                             {deckInfo.visibility === 'private'
-                                ? 'Private'
-                                : 'Public'}
+                                ? 'Riêng tư'
+                                : 'Công khai'}
                         </Text>
                     </TouchableOpacity>
                 </View>
 
-                {/* Instructions for swipe gesture */}
-                <Text style={styles.sectionTitle}>Flashcards</Text>
+                <Text style={styles.sectionTitle}>Thẻ học</Text>
 
                 <Text style={styles.instructionText}>
                     <Ionicons
@@ -247,7 +229,7 @@ const AddDeckScreen = () => {
                         size={16}
                         color="#666"
                     />
-                    Swipe left on a flashcard to delete it
+                    {' '}Vuốt trái để xóa thẻ
                 </Text>
 
                 {deckInfo.flashcards.map((card) => (
@@ -265,9 +247,8 @@ const AddDeckScreen = () => {
                     />
                 ))}
 
-                {/* Submit Button */}
                 <SubmitButton
-                    text={isSubmitting ? 'Creating...' : 'Create Deck'}
+                    text={isSubmitting ? 'Đang tạo...' : 'Tạo bộ thẻ'}
                     onPress={handleSubmit}
                     style={styles.submitButton}
                     disabled={isSubmitting}
@@ -285,7 +266,6 @@ const AddDeckScreen = () => {
                 />
             </ScrollView>
 
-            {/* Floating Action Button */}
             <TouchableOpacity
                 style={styles.fab}
                 onPress={() => addFlashcardPair(setDeckInfo)}
@@ -297,10 +277,7 @@ const AddDeckScreen = () => {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#F8F9FD',
-    },
+    container: { flex: 1, backgroundColor: '#F8F9FD' },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -312,21 +289,10 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#E0E0E0',
     },
-    backButton: {
-        padding: 5,
-    },
-    headerTitle: {
-        fontSize: 20,
-        fontWeight: '600',
-        color: '#333',
-    },
-    scrollContainer: {
-        padding: 20,
-        paddingBottom: 80, // Ensure space for FAB
-    },
-    inputGroup: {
-        marginBottom: 15,
-    },
+    backButton: { padding: 5 },
+    headerTitle: { fontSize: 20, fontWeight: '600', color: '#333' },
+    scrollContainer: { padding: 20, paddingBottom: 80 },
+    inputGroup: { marginBottom: 15 },
     inputLabel: {
         fontSize: 16,
         fontWeight: '500',
@@ -342,10 +308,7 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         fontSize: 16,
     },
-    descriptionInput: {
-        height: 100,
-        textAlignVertical: 'top',
-    },
+    descriptionInput: { height: 100, textAlignVertical: 'top' },
     sectionTitle: {
         fontSize: 18,
         fontWeight: '600',
@@ -367,25 +330,11 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         borderWidth: 1,
     },
-    publicSelector: {
-        backgroundColor: '#EBF3FF',
-        borderColor: '#3D5CFF',
-    },
-    privateSelector: {
-        backgroundColor: '#FFEBEB',
-        borderColor: '#FF6B6B',
-    },
-    visibilityText: {
-        marginLeft: 10,
-        fontSize: 16,
-        fontWeight: '500',
-    },
-    publicText: {
-        color: '#3D5CFF',
-    },
-    privateText: {
-        color: '#FF6B6B',
-    },
+    publicSelector: { backgroundColor: '#EBF3FF', borderColor: '#3D5CFF' },
+    privateSelector: { backgroundColor: '#FFEBEB', borderColor: '#FF6B6B' },
+    visibilityText: { marginLeft: 10, fontSize: 16, fontWeight: '500' },
+    publicText: { color: '#3D5CFF' },
+    privateText: { color: '#FF6B6B' },
     submitButton: {
         backgroundColor: '#3D5CFF',
         paddingVertical: 14,
@@ -403,8 +352,8 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         justifyContent: 'center',
         alignItems: 'center',
-        elevation: 8, // Android shadow
-        shadowColor: '#000', // iOS shadow
+        elevation: 8,
+        shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
         shadowRadius: 4,

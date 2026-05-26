@@ -72,7 +72,7 @@ export default function TestScreen() {
 
     const totalQuestions = questions.length
     const currentQuestion = questions[currentIndex] || {
-        question: 'Loading...',
+        question: 'Đang tải...',
         options: [],
     }
     const isLast = currentIndex === totalQuestions - 1
@@ -176,7 +176,7 @@ export default function TestScreen() {
                 <StatusBar barStyle="dark-content" />
                 <View style={styles.loadingContainer}>
                     <Text style={styles.loadingText}>
-                        Preparing your test...
+                        Đang chuẩn bị bài kiểm tra...
                     </Text>
                 </View>
             </SafeAreaView>
@@ -192,7 +192,7 @@ export default function TestScreen() {
                 <TouchableOpacity onPress={handleClose} style={styles.iconBtn}>
                     <Ionicons name="close" size={24} color="#333" />
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>{deckName || 'Test'}</Text>
+                <Text style={styles.headerTitle}>{deckName || 'Kiểm tra'}</Text>
                 <View style={{ width: 24 }} />
             </View>
 
@@ -215,7 +215,7 @@ export default function TestScreen() {
                             {currentQuestion.question}
                         </Text>
                         <TouchableOpacity onPress={handleSkip}>
-                            <Text style={styles.skipText}>Skip</Text>
+                            <Text style={styles.skipText}>Bỏ qua</Text>
                         </TouchableOpacity>
                     </View>
 
@@ -223,13 +223,13 @@ export default function TestScreen() {
                     {currentQuestion.type === 'written' ? (
                         <View style={styles.writtenContainer}>
                             <Text style={styles.writtenInstructions}>
-                                Type your answer in the field below.
+                                Nhập câu trả lời của bạn vào ô bên dưới.
                             </Text>
                             <TextInput
                                 style={styles.writtenInput}
                                 value={writtenAnswer}
                                 onChangeText={setWrittenAnswer}
-                                placeholder="Enter your answer here..."
+                                placeholder="Nhập câu trả lời tại đây..."
                                 placeholderTextColor="#999"
                                 multiline
                                 blurOnSubmit
@@ -247,7 +247,7 @@ export default function TestScreen() {
                                     disabled={!writtenAnswer.trim()}
                                 >
                                     <Text style={styles.writtenButtonText}>
-                                        Check Answer
+                                        Kiểm tra đáp án
                                     </Text>
                                 </TouchableOpacity>
                             )}
@@ -300,12 +300,12 @@ export default function TestScreen() {
                                             currentQuestion.correctAnswer
                                                 .trim()
                                                 .toLowerCase()
-                                                ? 'Correct!'
-                                                : 'Incorrect'}
+                                                ? 'Chính xác!'
+                                                : 'Sai rồi'}
                                         </Text>
                                     </View>
                                     <Text style={styles.writtenAnswerLabel}>
-                                        Correct Answer:
+                                        Đáp án đúng:
                                     </Text>
                                     <Text style={styles.writtenAnswer}>
                                         {currentQuestion.correctAnswer}
@@ -343,12 +343,12 @@ export default function TestScreen() {
                                 <Text style={styles.explanationTitle}>
                                     {selectedOption ===
                                     currentQuestion.correctAnswer
-                                        ? 'Correct!'
-                                        : 'Incorrect!'}
+                                        ? 'Chính xác!'
+                                        : 'Sai rồi!'}
                                 </Text>
                                 <Text style={styles.explanationText}>
-                                    The correct definition of "
-                                    {currentQuestion.flashcard.frontText}" is:
+                                    Định nghĩa đúng của "
+                                    {currentQuestion.flashcard.frontText}" là:
                                 </Text>
                                 <Text style={styles.actualDefinition}>
                                     {currentQuestion.actualDefinition}
@@ -362,7 +362,7 @@ export default function TestScreen() {
                             showWrittenFeedback) ||
                         (selectedOption !== null && isLast && (
                             <SubmitButton
-                                text={isLast ? 'Finish' : 'Next'}
+                                text={isLast ? 'Hoàn thành' : 'Tiếp theo'}
                                 onPress={handleNextOrFinish}
                                 style={styles.nextBtn}
                             />

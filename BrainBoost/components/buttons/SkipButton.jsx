@@ -21,7 +21,7 @@ const SkipButton = ({ hideSkip, onSkip }) => {
       onPress={handleSkip}
       activeOpacity={0.7}
     >
-      <Text style={styles.skipText}>Skip</Text>
+      <Text style={styles.skipText}>Bỏ qua</Text>
     </TouchableOpacity>
   );
 };

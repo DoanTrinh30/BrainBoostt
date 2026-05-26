@@ -16,6 +16,12 @@ import { generateDeckWithAI, getHomeData } from '../../services/homeService'
 import { ITEM_WIDTH } from '../../constants/sizes'
 import { useSelector } from 'react-redux'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import {
+    getRecommendations,
+    getReviewStats,
+} from '../../services/reviewLogService'
+import MLRecommendBanner from '../../components/containers/MLRecommendBanner'
+import { getProfile } from '../../services/profileService'
 
 export default function HomeScreen() {
     const router = useRouter()
@@ -37,6 +43,27 @@ export default function HomeScreen() {
         enabled: !!accessToken,
     })
 
+    const { data: userProfile } = useQuery({
+        queryKey: ['userProfile'],
+        queryFn: getProfile,
+        enabled: !!accessToken,
+    })
+
+    const { data: recommendData, isLoading: isLoadingRecommend } = useQuery({
+        queryKey: ['mlRecommendations'],
+        queryFn: () => getRecommendations(5),
+        enabled: !!accessToken,
+        refetchOnWindowFocus: true,
+        staleTime: 60 * 1000,
+    })
+
+    const { data: reviewStats } = useQuery({
+        queryKey: ['reviewStats'],
+        queryFn: getReviewStats,
+        enabled: !!accessToken,
+        staleTime: 30 * 1000,
+    })
+
     const generateDeckMutation = useMutation({
         mutationFn: generateDeckWithAI,
         onSuccess: (data) => {
@@ -44,9 +71,9 @@ export default function HomeScreen() {
             router.push({
                 pathname: '/decks/adddeck',
                 params: {
-                    title: topic || 'AI Generated Flashcards',
+                    title: topic || 'Bộ thẻ tạo bằng AI',
                     description:
-                        data.description || 'Flashcards generated with AI',
+                        data.description || 'Bộ thẻ được tạo tự động bằng AI',
                     flashcards: JSON.stringify(data.flashcards),
                 },
             })
@@ -67,16 +94,12 @@ export default function HomeScreen() {
     )
 
     const navigateToClassDetail = useCallback(
-        (item) => {
-            router.push('/decks/classdetail')
-        },
+        () => router.push('/decks/classdetail'),
         [router],
     )
 
     const navigateToFolderDetail = useCallback(
-        (item) => {
-            router.push('/folderdetail')
-        },
+        () => router.push('/folderdetail'),
         [router],
     )
 
@@ -92,6 +115,31 @@ export default function HomeScreen() {
         generateDeckMutation.mutate(params)
     }, [])
 
+    const handleStartMLReview = useCallback(() => {
+        if (!recommendData?.recommendations?.length) return
+
+        const flashcardsToReview = recommendData.recommendations
+            .filter((r) => r.flashcard)
+            .map((r) => ({
+                id: r.flashcard.id,
+                frontText: r.flashcard.frontText,
+                backText: r.flashcard.backText,
+                imageUrl: r.flashcard.imageUrl,
+                _mlRetention: r.retentionProbability,
+            }))
+
+        if (flashcardsToReview.length === 0) return
+
+        router.push({
+            pathname: '/learning/flashcard',
+            params: {
+                flashcards: JSON.stringify(flashcardsToReview),
+                deckName: '🧠 AI gợi ý ôn tập',
+                deckId: '',
+            },
+        })
+    }, [recommendData, router])
+
     if (isLoading)
         return (
             <View style={styles.loadingContainer}>
@@ -102,32 +150,42 @@ export default function HomeScreen() {
     if (isError)
         return (
             <View style={styles.loadingContainer}>
-                <Text>Error: {error.message}</Text>
-                <Text>Try to refresh the page</Text>
+                <Text>Lỗi: {error.message}</Text>
+                <Text>Hãy thử tải lại trang</Text>
             </View>
         )
 
     const safeHomeData = homeData || { decks: [], classes: [], folders: [] }
 
     const userData = {
-        name: 'Dong',
-        progress: [
-            {
-                name: 'Good',
-                percentage: 70,
-                color: '#A5D8FF',
-                legendFontColor: '#7F7F7F',
-                legendFontSize: 12,
-            },
-            {
-                name: 'Need to learn more',
-                percentage: 30,
-                color: '#FDAF75',
-                legendFontColor: '#7F7F7F',
-                legendFontSize: 12,
-            },
-        ],
+        name: userProfile?.username || 'bạn',
+        avatar_url: userProfile?.avatar_url,
     }
+
+    const totalReviews = reviewStats?.totalReviews || 0
+    const accuracy = reviewStats?.accuracy || 0
+    const accuracyPercent = Math.round(accuracy * 100)
+    const needToLearnPercent = 100 - accuracyPercent
+    const hasReviewData = totalReviews > 0
+
+    const progressData = hasReviewData
+        ? [
+              {
+                  name: 'Đã nhớ tốt',
+                  percentage: accuracyPercent,
+                  color: '#A5D8FF',
+                  legendFontColor: '#7F7F7F',
+                  legendFontSize: 12,
+              },
+              {
+                  name: 'Cần ôn lại',
+                  percentage: needToLearnPercent,
+                  color: '#FDAF75',
+                  legendFontColor: '#7F7F7F',
+                  legendFontSize: 12,
+              },
+          ]
+        : []
 
     const handleScroll = (event, setIndex) => {
         const offsetX = event.nativeEvent.contentOffset.x
@@ -150,16 +208,22 @@ export default function HomeScreen() {
                     }}
                 />
 
+                <MLRecommendBanner
+                    recommendations={recommendData?.recommendations || []}
+                    isLoading={isLoadingRecommend}
+                    onPress={handleStartMLReview}
+                />
+
                 <View style={styles.content}>
                     <SubmitButton
                         isLoading={generateDeckMutation.isPending}
-                        text="✨ Generate New Flashcards with AI ✨"
+                        text="✨ Tạo thẻ mới với AI ✨"
                         style={styles.buttonShadow}
                         onPress={handleClickGenerateDeck}
-                        textStyle={{ fontSize: 15 }}
+                        textStyle={{ fontSize: 17 }}
                     />
 
-                    <Text style={styles.sectionTitle}>Your Decks</Text>
+                    <Text style={styles.sectionTitle}>Bộ thẻ của bạn</Text>
                     <ContentCarousel
                         items={safeHomeData.decks || []}
                         type="deck"
@@ -170,7 +234,7 @@ export default function HomeScreen() {
                         onPressItem={navigateToDeckDetail}
                     />
 
-                    <Text style={styles.sectionTitle}>Your Classes</Text>
+                    <Text style={styles.sectionTitle}>Lớp học của bạn</Text>
                     <ContentCarousel
                         items={safeHomeData.classes || []}
                         type="class"
@@ -181,7 +245,7 @@ export default function HomeScreen() {
                         onPressItem={navigateToClassDetail}
                     />
 
-                    <Text style={styles.sectionTitle}>Your Folders</Text>
+                    <Text style={styles.sectionTitle}>Thư mục của bạn</Text>
                     <ContentCarousel
                         items={safeHomeData.folders || []}
                         type="folder"
@@ -192,40 +256,56 @@ export default function HomeScreen() {
                         onPressItem={navigateToFolderDetail}
                     />
 
-                    <Text style={styles.sectionTitle}>Your Progress Chart</Text>
-                    <View style={styles.chartContainer}>
-                        <PieChart
-                            data={userData.progress.map((item) => ({
-                                name: item.name,
-                                population: item.percentage,
-                                color: item.color,
-                                legendFontColor: item.legendFontColor,
-                                legendFontSize: item.legendFontSize,
-                            }))}
-                            width={170}
-                            height={170}
-                            chartConfig={{
-                                backgroundGradientFrom: '#fff',
-                                backgroundGradientTo: '#fff',
-                                color: (opacity = 1) =>
-                                    `rgba(0, 0, 0, ${opacity})`,
-                                labelColor: (opacity = 1) =>
-                                    `rgba(0, 0, 0, ${opacity})`,
-                                decimalPlaces: 0,
-                            }}
-                            accessor="population"
-                            backgroundColor="transparent"
-                            paddingLeft="50"
-                            absolute
-                            style={{ alignSelf: 'center' }}
-                            hasLegend={false}
-                        />
-                        <PieLegend data={userData.progress} />
-                    </View>
+                    <Text style={styles.sectionTitle}>Biểu đồ tiến độ</Text>
+                    {hasReviewData ? (
+                        <View style={styles.chartContainer}>
+                            <PieChart
+                                data={progressData.map((item) => ({
+                                    name: item.name,
+                                    population: item.percentage,
+                                    color: item.color,
+                                    legendFontColor: item.legendFontColor,
+                                    legendFontSize: item.legendFontSize,
+                                }))}
+                                width={170}
+                                height={170}
+                                chartConfig={{
+                                    backgroundGradientFrom: '#fff',
+                                    backgroundGradientTo: '#fff',
+                                    color: (opacity = 1) =>
+                                        `rgba(0, 0, 0, ${opacity})`,
+                                    labelColor: (opacity = 1) =>
+                                        `rgba(0, 0, 0, ${opacity})`,
+                                    decimalPlaces: 0,
+                                }}
+                                accessor="population"
+                                backgroundColor="transparent"
+                                paddingLeft="50"
+                                absolute
+                                style={{ alignSelf: 'center' }}
+                                hasLegend={false}
+                            />
+                            <View style={styles.legendWrapper}>
+                                <PieLegend data={progressData} />
+                                <Text style={styles.chartFooter}>
+                                    📊 Dựa trên {totalReviews} lượt ôn (AI)
+                                </Text>
+                            </View>
+                        </View>
+                    ) : (
+                        <View style={styles.emptyChartContainer}>
+                            <Text style={styles.emptyChartTitle}>
+                                📚 Chưa có dữ liệu học
+                            </Text>
+                            <Text style={styles.emptyChartText}>
+                                Hãy bắt đầu học flashcards để AI phân tích tiến
+                                độ của bạn!
+                            </Text>
+                        </View>
+                    )}
                 </View>
             </ScrollView>
 
-            {/* AI Generate Modal */}
             <AIGenerateModal
                 visible={isModalVisible}
                 onClose={handleCloseModal}
@@ -239,17 +319,9 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-    safeArea: {
-        flex: 1,
-        backgroundColor: '#fff',
-    },
-    container: {
-        backgroundColor: '#fff',
-        paddingHorizontal: 15,
-    },
-    content: {
-        paddingTop: 20,
-    },
+    safeArea: { flex: 1, backgroundColor: '#fff' },
+    container: { backgroundColor: '#fff', paddingHorizontal: 15 },
+    content: { paddingTop: 20 },
     buttonShadow: {
         marginBottom: 25,
         backgroundColor: '#3D5CFF',
@@ -269,6 +341,36 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginBottom: 130,
         paddingHorizontal: 20,
+    },
+    legendWrapper: { flex: 1, marginLeft: 10 },
+    chartFooter: {
+        marginTop: 10,
+        fontSize: 11,
+        color: '#9CA3AF',
+        fontStyle: 'italic',
+    },
+    emptyChartContainer: {
+        marginHorizontal: 20,
+        marginBottom: 130,
+        padding: 24,
+        backgroundColor: '#F9FAFB',
+        borderRadius: 16,
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#E5E7EB',
+        borderStyle: 'dashed',
+    },
+    emptyChartTitle: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#1A1F36',
+        marginBottom: 6,
+    },
+    emptyChartText: {
+        fontSize: 13,
+        color: '#6B7280',
+        textAlign: 'center',
+        lineHeight: 18,
     },
     loadingContainer: {
         flex: 1,

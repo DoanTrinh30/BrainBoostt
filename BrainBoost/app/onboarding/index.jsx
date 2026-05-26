@@ -12,18 +12,18 @@ const OnboardingScreen = () => {
 
     const slides = [
         {
-            title: "Quick and easy learning",
-            subtitle: "Easy and fast learning at any time to help you improve various skills",
+            title: "Học nhanh và dễ dàng",
+            subtitle: "Học mọi lúc một cách dễ dàng để nâng cao nhiều kỹ năng",
             image: require("../../assets/images/onboarding01.png"),
         },
         {
-            title: "Flexible learning",
-            subtitle: "Learn at your own pace with flexible schedules and expert guidance",
+            title: "Học linh hoạt",
+            subtitle: "Học theo nhịp độ của bạn với lịch linh hoạt và sự hướng dẫn từ chuyên gia",
             image: require("../../assets/images/onboarding02.png"),
         },
         {
-            title: "Create your own study plan",
-            subtitle: "Study according to the study plan, make study more motivated",
+            title: "Tạo kế hoạch học của riêng bạn",
+            subtitle: "Học theo kế hoạch để có thêm động lực mỗi ngày",
             image: require("../../assets/images/onboarding03.png"),
             buttons: true,
         },

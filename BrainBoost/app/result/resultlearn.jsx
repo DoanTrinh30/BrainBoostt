@@ -90,15 +90,14 @@ const ResultLearnScreen = () => {
                     </View>
 
                     <Text style={styles.scoreText}>
-                        You got {correctCount}/{total} correct!
+                        Bạn trả lời đúng {correctCount}/{total} câu!
                     </Text>
 
                     <Text style={styles.title}>
-                        Way to go! You've studied all the terms.
+                        Tuyệt vời! Bạn đã ôn xong tất cả thuật ngữ.
                     </Text>
                     <Text style={styles.description}>
-                        Try another round so you can get more practice with the
-                        tough ones.
+                        Hãy luyện thêm một lượt nữa để củng cố những câu khó nhé.
                     </Text>
                 </>
             ) : (
@@ -108,23 +107,23 @@ const ResultLearnScreen = () => {
                     </View>
 
                     <Text style={styles.scoreText}>
-                        You got {correctCount}/{total} correct (
+                        Bạn trả lời đúng {correctCount}/{total} câu (
                         {percentageCorrect}%)
                     </Text>
 
                     <Text style={styles.improvementTitle}>
-                        Keep going! You're making progress.
+                        Cố lên! Bạn đang tiến bộ rồi.
                     </Text>
                     <Text style={styles.improvementDescription}>
-                        It takes practice to master these concepts. Let's
-                        continue learning and try again.
+                        Cần luyện tập thêm để nắm chắc kiến thức. Hãy tiếp tục
+                        học và thử lại nhé.
                     </Text>
                 </>
             )}
 
             <SubmitButton
                 onPress={handlePracticeMore}
-                text={passedThreshold ? 'Practice more' : 'Try again'}
+                text={passedThreshold ? 'Luyện thêm' : 'Thử lại'}
                 style={styles.primaryButton}
                 textStyle={styles.primaryButtonText}
                 icon={
@@ -141,7 +140,7 @@ const ResultLearnScreen = () => {
 
             <SubmitButton
                 onPress={handleTakeTest}
-                text="Take a test"
+                text="Làm bài kiểm tra"
                 style={styles.secondaryButton}
                 textStyle={styles.secondaryButtonText}
             />

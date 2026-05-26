@@ -13,6 +13,7 @@ import {
     getAllDecks,
     deleteDeck,
     getFlashcardsById,
+    getDeckById,
 } from '../../services/deckService'
 import { useRouter } from 'expo-router'
 import Toast from 'react-native-toast-message'
@@ -35,22 +36,61 @@ export default function DecksScreen() {
 
             Toast.show({
                 type: 'success',
-                text1: 'Deck deleted successfully!',
+                text1: 'Đã xóa bộ thẻ',
                 position: 'top',
             })
         },
         onError: (error) => {
             Toast.show({
                 type: 'error',
-                text1: 'Failed to delete deck',
-                text2: error.message || 'Please try again later',
+                text1: 'Không thể xóa bộ thẻ',
+                text2: error.message || 'Vui lòng thử lại sau',
                 position: 'top',
             })
         },
     })
 
+    // Bấm vào card → vào trang chi tiết bộ thẻ
     const handleDeckPress = (deckId) => {
         router.push({ pathname: '/decks/deckdetail', params: { id: deckId } })
+    }
+
+    // Bấm nút "Học ngay" → fetch deck đầy đủ rồi vào trực tiếp trang học thẻ (skip deck detail)
+    const handleDeckStudy = async (deck) => {
+        try {
+            // Fetch deck đầy đủ (kèm flashcards) — cần thiết vì list `decks` thường không có flashcards
+            const fullDeck = await queryClient.fetchQuery({
+                queryKey: ['deck', deck.id],
+                queryFn: () => getDeckById(deck.id),
+            })
+
+            if (!fullDeck?.flashcards?.length) {
+                Toast.show({
+                    type: 'info',
+                    text1: 'Bộ thẻ trống',
+                    text2: 'Hãy thêm thẻ trước khi học nhé!',
+                    position: 'top',
+                })
+                return
+            }
+
+            router.push({
+                pathname: '/learning/flashcard',
+                params: {
+                    flashcards: JSON.stringify(fullDeck.flashcards),
+                    deckName: fullDeck.name,
+                    deckId: fullDeck.id,
+                },
+            })
+        } catch (error) {
+            console.error('Error starting study:', error)
+            Toast.show({
+                type: 'error',
+                text1: 'Không thể bắt đầu học',
+                text2: error.message || 'Vui lòng thử lại sau',
+                position: 'top',
+            })
+        }
     }
 
     const handleDeckEdit = async (deck) => {
@@ -72,8 +112,8 @@ export default function DecksScreen() {
             console.error('Error fetching flashcards:', error)
             Toast.show({
                 type: 'error',
-                text1: 'Failed to fetch flashcards',
-                text2: error.message || 'Please try again later',
+                text1: 'Không thể tải thẻ học',
+                text2: error.message || 'Vui lòng thử lại sau',
                 position: 'top',
             })
         }
@@ -85,7 +125,6 @@ export default function DecksScreen() {
         deleteMutation.mutate(deckId)
     }
 
-    // Loading and error states
     if (isLoading)
         return (
             <SafeAreaView style={styles.safeArea}>
@@ -100,7 +139,7 @@ export default function DecksScreen() {
             <SafeAreaView style={styles.safeArea}>
                 <View style={styles.loadingContainer}>
                     <Text style={styles.errorText}>
-                        Error loading decks: {error.message}
+                        Lỗi khi tải bộ thẻ: {error.message}
                     </Text>
                 </View>
             </SafeAreaView>
@@ -111,7 +150,7 @@ export default function DecksScreen() {
             <View style={styles.container}>
                 <SubmitButton
                     onPress={handleCreateNewSet}
-                    text="Create New Set"
+                    text="Tạo bộ thẻ mới"
                     style={styles.createButton}
                     textStyle={styles.createButtonText}
                     icon={
@@ -125,7 +164,7 @@ export default function DecksScreen() {
                     }
                 />
 
-                <Text style={styles.header}>Your Decks</Text>
+                <Text style={styles.header}>Bộ thẻ của bạn</Text>
                 <FlatList
                     data={data?.decks || []}
                     keyExtractor={(item) => item.id}
@@ -137,6 +176,7 @@ export default function DecksScreen() {
                             updatedAt={item.updatedAt}
                             onPress={() => handleDeckPress(item.id)}
                             onEdit={() => handleDeckEdit(item)}
+                            onStudy={() => handleDeckStudy(item)}
                             onDelete={() => handleDeckDelete(item.id)}
                         />
                     )}
@@ -149,15 +189,8 @@ export default function DecksScreen() {
 }
 
 const styles = StyleSheet.create({
-    safeArea: {
-        flex: 1,
-        backgroundColor: '#fff',
-    },
-    container: {
-        paddingHorizontal: 20,
-        backgroundColor: '#fff',
-        flex: 1,
-    },
+    safeArea: { flex: 1, backgroundColor: '#fff' },
+    container: { paddingHorizontal: 20, backgroundColor: '#fff', flex: 1 },
     createButton: {
         backgroundColor: '#3D5CFF',
         paddingVertical: 14,
@@ -179,9 +212,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         color: '#1A1F36',
     },
-    listContentContainer: {
-        paddingBottom: 50,
-    },
+    listContentContainer: { paddingBottom: 50 },
     loadingContainer: {
         width: '100%',
         height: '100%',
@@ -189,9 +220,5 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    errorText: {
-        color: 'red',
-        textAlign: 'center',
-        fontSize: 16,
-    },
+    errorText: { color: 'red', textAlign: 'center', fontSize: 16 },
 })

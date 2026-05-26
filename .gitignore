@@ -19,3 +19,8 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+
+# Large data files
+brainboost-ml/data/*.csv
+brainboost-ml/data/*.csv.gz
+brainboost-ml/data/*.pkl

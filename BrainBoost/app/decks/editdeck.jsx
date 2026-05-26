@@ -19,7 +19,7 @@ import {
     createFlashcards,
     updateFlashcard,
 } from '../../services/deckService'
-import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm, Controller } from 'react-hook-form'
 
 const EditDeckScreen = () => {
@@ -41,8 +41,8 @@ const EditDeckScreen = () => {
         console.log('Error parsing flashcardData:', e)
         Toast.show({
             type: 'error',
-            text1: 'Error loading flashcards',
-            text2: 'Could not parse flashcard data.',
+            text1: 'Lỗi tải thẻ học',
+            text2: 'Không thể đọc dữ liệu thẻ.',
         })
     }
 
@@ -50,8 +50,8 @@ const EditDeckScreen = () => {
         router.back()
         Toast.show({
             type: 'error',
-            text1: 'Error',
-            text2: 'No deck data provided',
+            text1: 'Lỗi',
+            text2: 'Không có dữ liệu bộ thẻ',
         })
         return null
     }
@@ -82,7 +82,6 @@ const EditDeckScreen = () => {
         },
     })
 
-    // Update deck mutation
     const updateDeckMutation = useMutation({
         mutationFn: (deckData) => updateDeck(id, deckData),
         onSuccess: () => {
@@ -94,20 +93,19 @@ const EditDeckScreen = () => {
             if (error.message && error.message.includes('permission')) {
                 Toast.show({
                     type: 'error',
-                    text1: 'Permission Denied',
-                    text2: 'You can only edit decks that you have created.',
+                    text1: 'Không có quyền',
+                    text2: 'Bạn chỉ có thể chỉnh sửa bộ thẻ do bạn tạo.',
                 })
             } else {
                 Toast.show({
                     type: 'error',
-                    text1: 'Failed to update deck',
-                    text2: error.message || 'Please try again later',
+                    text1: 'Không thể cập nhật bộ thẻ',
+                    text2: error.message || 'Vui lòng thử lại sau',
                 })
             }
         },
     })
 
-    // Update flashcard mutation
     const updateFlashcardMutation = useMutation({
         mutationFn: (flashcardData) => {
             return updateFlashcard(flashcardData.id, {
@@ -119,13 +117,12 @@ const EditDeckScreen = () => {
             console.log('Error updating flashcard:', error)
             Toast.show({
                 type: 'error',
-                text1: 'Failed to update flashcards',
-                text2: error.message || 'Please try again later',
+                text1: 'Không thể cập nhật thẻ',
+                text2: error.message || 'Vui lòng thử lại sau',
             })
         },
     })
 
-    // Create flashcards mutation
     const createFlashcardsMutation = useMutation({
         mutationFn: (data) => createFlashcards(id, data),
         onSuccess: () => {
@@ -135,8 +132,8 @@ const EditDeckScreen = () => {
             console.log('Error creating flashcards:', error)
             Toast.show({
                 type: 'error',
-                text1: 'Failed to add new flashcards',
-                text2: error.message || 'Please try again later',
+                text1: 'Không thể thêm thẻ mới',
+                text2: error.message || 'Vui lòng thử lại sau',
             })
         },
     })
@@ -171,7 +168,7 @@ const EditDeckScreen = () => {
     const showSuccessAndNavigate = () => {
         Toast.show({
             type: 'success',
-            text1: 'Deck updated successfully!',
+            text1: 'Cập nhật bộ thẻ thành công!',
             position: 'top',
         })
 
@@ -190,7 +187,6 @@ const EditDeckScreen = () => {
         })
     }
 
-    // Flashcard handlers
     const handleFlashcardChange = (id, field, value) => {
         setFlashcards((prev) =>
             prev.map((card) =>
@@ -215,15 +211,10 @@ const EditDeckScreen = () => {
         updateFlashcardMutation.isPending ||
         createFlashcardsMutation.isPending
 
-    // Check if any flashcards have changes
     const hasFlashcardChanges = () => {
-        // Use the parsed data here as well
         const originalFlashcards = parsedFlashcardData || []
-
-        // Check if flashcards array length is different
         if (flashcards.length !== originalFlashcards.length) return true
 
-        // Check for changes in existing flashcards
         const existingCards = flashcards.filter((card) => !card.isNew)
         for (const card of existingCards) {
             const originalCard = originalFlashcards.find(
@@ -246,7 +237,6 @@ const EditDeckScreen = () => {
             }
         }
 
-        // Check if there are any new flashcards with content
         const newCardsWithContent = flashcards.filter(
             (card) =>
                 card.isNew &&
@@ -262,7 +252,6 @@ const EditDeckScreen = () => {
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar barStyle="dark-content" />
-            {/* Header */}
             <View style={styles.header}>
                 <TouchableOpacity
                     onPress={() => router.back()}
@@ -272,14 +261,13 @@ const EditDeckScreen = () => {
                         <Ionicons name="arrow-back" size={24} color="#333" />
                     </Text>
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>Edit Deck</Text>
+                <Text style={styles.headerTitle}>Chỉnh sửa bộ thẻ</Text>
                 <View style={{ width: 24 }} />
             </View>
 
             <ScrollView contentContainerStyle={styles.scrollContainer}>
-                {/* Title and Description */}
                 <View style={styles.inputGroup}>
-                    <Text style={styles.inputLabel}>Title</Text>
+                    <Text style={styles.inputLabel}>Tiêu đề</Text>
                     <Controller
                         control={control}
                         name="title"
@@ -289,7 +277,7 @@ const EditDeckScreen = () => {
                                     styles.input,
                                     errors.title && styles.inputError,
                                 ]}
-                                placeholder="Enter deck title"
+                                placeholder="Nhập tiêu đề bộ thẻ"
                                 value={value}
                                 onChangeText={onChange}
                                 onBlur={onBlur}
@@ -304,7 +292,7 @@ const EditDeckScreen = () => {
                 </View>
 
                 <View style={styles.inputGroup}>
-                    <Text style={styles.inputLabel}>Description</Text>
+                    <Text style={styles.inputLabel}>Mô tả</Text>
                     <Controller
                         control={control}
                         name="description"
@@ -315,7 +303,7 @@ const EditDeckScreen = () => {
                                     styles.descriptionInput,
                                     errors.description && styles.inputError,
                                 ]}
-                                placeholder="Enter deck description"
+                                placeholder="Nhập mô tả bộ thẻ"
                                 value={value}
                                 onChangeText={onChange}
                                 onBlur={onBlur}
@@ -331,7 +319,7 @@ const EditDeckScreen = () => {
                 </View>
 
                 <View style={styles.inputGroup}>
-                    <Text style={styles.inputLabel}>Visibility</Text>
+                    <Text style={styles.inputLabel}>Quyền riêng tư</Text>
                     <Controller
                         control={control}
                         name="visibility"
@@ -376,15 +364,16 @@ const EditDeckScreen = () => {
                                             : styles.publicText,
                                     ]}
                                 >
-                                    {value === 'private' ? 'Private' : 'Public'}
+                                    {value === 'private'
+                                        ? 'Riêng tư'
+                                        : 'Công khai'}
                                 </Text>
                             </TouchableOpacity>
                         )}
                     />
                 </View>
 
-                {/* Instructions for swipe gesture */}
-                <Text style={styles.sectionTitle}>Flashcards</Text>
+                <Text style={styles.sectionTitle}>Thẻ học</Text>
 
                 <View style={styles.instructionText}>
                     <Text style={styles.iconContainer}>
@@ -395,11 +384,10 @@ const EditDeckScreen = () => {
                         />
                     </Text>
                     <Text style={styles.instructionTextContent}>
-                        Swipe left on a flashcard to delete it
+                        Vuốt trái để xóa thẻ
                     </Text>
                 </View>
 
-                {/* Flashcards using the PairInput component */}
                 {flashcards.map((card) => (
                     <PairInput
                         key={card.id}
@@ -411,9 +399,8 @@ const EditDeckScreen = () => {
                     />
                 ))}
 
-                {/* Submit Button */}
                 <SubmitButton
-                    text={isSubmitting ? 'Updating...' : 'Update Deck'}
+                    text={isSubmitting ? 'Đang cập nhật...' : 'Cập nhật'}
                     onPress={handleSubmit(onSubmit)}
                     style={[
                         styles.submitButton,
@@ -428,7 +415,6 @@ const EditDeckScreen = () => {
                 />
             </ScrollView>
 
-            {/* Floating Action Button */}
             <TouchableOpacity style={styles.fab} onPress={addFlashcardPair}>
                 <Text style={styles.iconContainer}>
                     <Ionicons name="add" size={30} color="#fff" />
@@ -439,10 +425,7 @@ const EditDeckScreen = () => {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#FFF',
-    },
+    container: { flex: 1, backgroundColor: '#FFF' },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -454,21 +437,10 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#E0E0E0',
     },
-    backButton: {
-        padding: 5,
-    },
-    headerTitle: {
-        fontSize: 20,
-        fontWeight: '600',
-        color: '#333',
-    },
-    scrollContainer: {
-        padding: 20,
-        paddingBottom: 80,
-    },
-    inputGroup: {
-        marginBottom: 15,
-    },
+    backButton: { padding: 5 },
+    headerTitle: { fontSize: 20, fontWeight: '600', color: '#333' },
+    scrollContainer: { padding: 20, paddingBottom: 80 },
+    inputGroup: { marginBottom: 15 },
     inputLabel: {
         fontSize: 16,
         fontWeight: '500',
@@ -484,18 +456,9 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         fontSize: 16,
     },
-    inputError: {
-        borderColor: '#FF6B6B',
-    },
-    errorText: {
-        color: '#FF6B6B',
-        fontSize: 12,
-        marginTop: 5,
-    },
-    descriptionInput: {
-        height: 100,
-        textAlignVertical: 'top',
-    },
+    inputError: { borderColor: '#FF6B6B' },
+    errorText: { color: '#FF6B6B', fontSize: 12, marginTop: 5 },
+    descriptionInput: { height: 100, textAlignVertical: 'top' },
     sectionTitle: {
         fontSize: 18,
         fontWeight: '600',
@@ -513,9 +476,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    instructionTextContent: {
-        marginLeft: 10,
-    },
+    instructionTextContent: { marginLeft: 10 },
     visibilitySelector: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -523,25 +484,11 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         borderWidth: 1,
     },
-    publicSelector: {
-        backgroundColor: '#EBF3FF',
-        borderColor: '#3D5CFF',
-    },
-    privateSelector: {
-        backgroundColor: '#FFEBEB',
-        borderColor: '#FF6B6B',
-    },
-    visibilityText: {
-        marginLeft: 10,
-        fontSize: 16,
-        fontWeight: '500',
-    },
-    publicText: {
-        color: '#3D5CFF',
-    },
-    privateText: {
-        color: '#FF6B6B',
-    },
+    publicSelector: { backgroundColor: '#EBF3FF', borderColor: '#3D5CFF' },
+    privateSelector: { backgroundColor: '#FFEBEB', borderColor: '#FF6B6B' },
+    visibilityText: { marginLeft: 10, fontSize: 16, fontWeight: '500' },
+    publicText: { color: '#3D5CFF' },
+    privateText: { color: '#FF6B6B' },
     submitButton: {
         backgroundColor: '#3D5CFF',
         paddingVertical: 14,
@@ -549,10 +496,7 @@ const styles = StyleSheet.create({
         marginTop: 25,
         marginBottom: 20,
     },
-    disabledButton: {
-        backgroundColor: '#A0A0A0',
-        opacity: 0.7,
-    },
+    disabledButton: { backgroundColor: '#A0A0A0', opacity: 0.7 },
     fab: {
         position: 'absolute',
         right: 25,
@@ -563,16 +507,13 @@ const styles = StyleSheet.create({
         borderRadius: 30,
         justifyContent: 'center',
         alignItems: 'center',
-        elevation: 8, // Android shadow
-        shadowColor: '#000', // iOS shadow
+        elevation: 8,
+        shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
         shadowRadius: 4,
     },
-    iconContainer: {
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
+    iconContainer: { alignItems: 'center', justifyContent: 'center' },
 })
 
 export default EditDeckScreen

@@ -59,8 +59,8 @@ export default function EditProfile() {
             queryClient.invalidateQueries({ queryKey: ['profile'] })
             Toast.show({
                 type: 'success',
-                text1: 'Profile Updated',
-                text2: 'Your profile has been updated successfully!',
+                text1: 'Cập nhật thành công',
+                text2: 'Thông tin tài khoản đã được cập nhật!',
                 position: 'top',
             })
             router.replace('/bottom/profile')
@@ -68,10 +68,10 @@ export default function EditProfile() {
         onError: (error) => {
             Toast.show({
                 type: 'error',
-                text1: 'Update Error',
+                text1: 'Cập nhật thất bại',
                 text2:
                     error.message ||
-                    'Failed to update profile. Please try again.',
+                    'Không thể cập nhật thông tin. Vui lòng thử lại.',
                 position: 'top',
             })
         },
@@ -83,8 +83,8 @@ export default function EditProfile() {
             queryClient.invalidateQueries({ queryKey: ['profile'] })
             Toast.show({
                 type: 'success',
-                text1: 'Avatar Updated',
-                text2: 'Your avatar has been updated successfully!',
+                text1: 'Cập nhật ảnh đại diện',
+                text2: 'Ảnh đại diện đã được cập nhật!',
                 position: 'top',
             })
             router.replace('/bottom/profile')
@@ -92,10 +92,10 @@ export default function EditProfile() {
         onError: (error) => {
             Toast.show({
                 type: 'error',
-                text1: 'Avatar Update Error',
+                text1: 'Cập nhật ảnh thất bại',
                 text2:
                     error.message ||
-                    'Failed to update avatar. Please try again.',
+                    'Không thể cập nhật ảnh đại diện. Vui lòng thử lại.',
                 position: 'top',
             })
         },
@@ -112,8 +112,8 @@ export default function EditProfile() {
             if (status !== 'granted') {
                 Toast.show({
                     type: 'error',
-                    text1: 'Permission Denied',
-                    text2: 'Permission to access media library is required.',
+                    text1: 'Không có quyền truy cập',
+                    text2: 'Cần cấp quyền truy cập thư viện ảnh để tiếp tục.',
                     position: 'top',
                 })
                 return
@@ -135,8 +135,8 @@ export default function EditProfile() {
         } catch (error) {
             Toast.show({
                 type: 'error',
-                text1: 'Avatar Selection Error',
-                text2: 'An error occurred while selecting the image.',
+                text1: 'Lỗi chọn ảnh',
+                text2: 'Đã xảy ra lỗi khi chọn ảnh.',
                 position: 'top',
             })
         }
@@ -167,7 +167,7 @@ export default function EditProfile() {
             <SafeAreaView style={styles.safeArea}>
                 <View style={styles.errorContainer}>
                     <Text style={styles.errorText}>
-                        Error: {error?.message || 'Failed to load profile'}
+                        Lỗi: {error?.message || 'Không thể tải thông tin tài khoản'}
                     </Text>
                     <TouchableOpacity
                         style={styles.retryButton}
@@ -177,7 +177,7 @@ export default function EditProfile() {
                             })
                         }
                     >
-                        <Text style={styles.retryButtonText}>Retry</Text>
+                        <Text style={styles.retryButtonText}>Thử lại</Text>
                     </TouchableOpacity>
                 </View>
             </SafeAreaView>
@@ -191,7 +191,7 @@ export default function EditProfile() {
                     <TouchableOpacity onPress={() => router.back()}>
                         <Icon name="arrow-left" size={24} color="#000" />
                     </TouchableOpacity>
-                    <Text style={styles.headerTitle}>Edit Profile</Text>
+                    <Text style={styles.headerTitle}>Chỉnh sửa hồ sơ</Text>
                     <TouchableOpacity
                         onPress={handleSubmit(handleUpdateProfile)}
                     >
@@ -216,10 +216,10 @@ export default function EditProfile() {
                     <Controller
                         control={control}
                         name="username"
-                        rules={{ required: 'Username is required' }}
+                        rules={{ required: 'Vui lòng nhập tên người dùng' }}
                         render={({ field: { onChange, value } }) => (
                             <FormFieldEdit
-                                label="User name"
+                                label="Tên người dùng"
                                 name="username"
                                 value={value}
                                 onChange={(_, value) => onChange(value)}
@@ -236,15 +236,15 @@ export default function EditProfile() {
                         control={control}
                         name="email"
                         rules={{
-                            required: 'Email is required',
+                            required: 'Vui lòng nhập email',
                             pattern: {
                                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                message: 'Invalid email address',
+                                message: 'Email không hợp lệ',
                             },
                         }}
                         render={({ field: { onChange, value } }) => (
                             <FormFieldEdit
-                                label="Email address"
+                                label="Địa chỉ email"
                                 name="email"
                                 type="email"
                                 value={value}
@@ -268,7 +268,7 @@ export default function EditProfile() {
                             >
                                 <View pointerEvents="none">
                                     <FormFieldEdit
-                                        label="Date of birth"
+                                        label="Ngày sinh"
                                         name="dob"
                                         value={value}
                                         onChange={() => {}}
@@ -295,6 +295,9 @@ export default function EditProfile() {
                         onCancel={() => setDatePickerVisible(false)}
                         maximumDate={new Date()}
                         display="spinner"
+                        locale="vi-VN"
+                        confirmTextIOS="Xác nhận"
+                        cancelTextIOS="Hủy"
                     />
                 </View>
             </ScrollView>

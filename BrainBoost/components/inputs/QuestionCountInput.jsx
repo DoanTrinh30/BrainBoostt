@@ -1,9 +1,6 @@
 import React from 'react'
 import { View, Text, TextInput, StyleSheet } from 'react-native'
 
-/**
- * Input component for entering the number of questions with validation
- */
 const QuestionCountInput = ({ value, onChange, onBlur, maxQuestions }) => {
     const isGreaterThanMax = parseInt(value, 10) > maxQuestions
     const isInvalid =
@@ -12,7 +9,7 @@ const QuestionCountInput = ({ value, onChange, onBlur, maxQuestions }) => {
     return (
         <View style={styles.container}>
             <View style={styles.inputRow}>
-                <Text style={styles.label}>Enter number of questions:</Text>
+                <Text style={styles.label}>Nhập số lượng câu hỏi:</Text>
                 <TextInput
                     style={styles.input}
                     value={value}
@@ -20,38 +17,31 @@ const QuestionCountInput = ({ value, onChange, onBlur, maxQuestions }) => {
                     onBlur={onBlur}
                     keyboardType="numeric"
                     maxLength={3}
-                    placeholder="Count"
+                    placeholder="Số"
                 />
             </View>
 
             {isGreaterThanMax && (
                 <Text style={styles.warning}>
-                    Maximum {maxQuestions} questions available
+                    Tối đa {maxQuestions} câu hỏi
                 </Text>
             )}
 
             {isInvalid && (
-                <Text style={styles.warning}>Minimum 1 question required</Text>
+                <Text style={styles.warning}>Tối thiểu 1 câu hỏi</Text>
             )}
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        marginBottom: 16,
-    },
+    container: { marginBottom: 16 },
     inputRow: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
     },
-    label: {
-        fontSize: 15,
-        fontWeight: '500',
-        color: '#555555',
-        flex: 1,
-    },
+    label: { fontSize: 15, fontWeight: '500', color: '#555555', flex: 1 },
     input: {
         backgroundColor: '#F5F5F7',
         borderRadius: 12,

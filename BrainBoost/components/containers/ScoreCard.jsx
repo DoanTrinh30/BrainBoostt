@@ -8,10 +8,10 @@ const ScoreCard = ({ lastScore, isLoading, formatDate }) => {
     return (
         <View style={styles.scoreCard}>
             {isLoading ? (
-                <Text style={styles.loadingText}>Loading score data...</Text>
+                <Text style={styles.loadingText}>Đang tải điểm...</Text>
             ) : lastScore ? (
                 <>
-                    <Text style={styles.lastScoreLabel}>Your last score</Text>
+                    <Text style={styles.lastScoreLabel}>Điểm gần nhất</Text>
                     <Text style={styles.scoreValue}>{lastScore.score}%</Text>
                     <Text style={styles.scoreDate}>
                         {formatDate
@@ -21,9 +21,11 @@ const ScoreCard = ({ lastScore, isLoading, formatDate }) => {
                 </>
             ) : (
                 <>
-                    <Text style={styles.noScoreTitle}>No previous tests</Text>
+                    <Text style={styles.noScoreTitle}>
+                        Chưa có bài kiểm tra nào
+                    </Text>
                     <Text style={styles.noScoreText}>
-                        Take your first test to track your progress
+                        Làm bài kiểm tra đầu tiên để theo dõi tiến độ
                     </Text>
                 </>
             )}

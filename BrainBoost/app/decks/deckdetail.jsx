@@ -37,7 +37,6 @@ const DeckDetailScreen = () => {
         mutationKey: ['deck', id],
         mutationFn: () => generateDistractors(deck.flashcards),
         onSuccess: (data) => {
-            console.log(data.response)
             router.push({
                 pathname: '/learning/learn',
                 params: {
@@ -52,8 +51,8 @@ const DeckDetailScreen = () => {
             console.log('Error generating distractors:', error)
             Toast.show({
                 type: 'error',
-                text1: 'Oops! We encountered an error',
-                text2: 'Please try again later.',
+                text1: 'Đã có lỗi xảy ra',
+                text2: 'Vui lòng thử lại sau.',
             })
         },
     })
@@ -106,13 +105,13 @@ const DeckDetailScreen = () => {
         return (
             <SafeAreaView style={[styles.safeArea, styles.centerContent]}>
                 <Text style={styles.errorText}>
-                    Error loading deck: {error.message}
+                    Lỗi khi tải bộ thẻ: {error.message}
                 </Text>
                 <TouchableOpacity
                     style={styles.button}
                     onPress={() => router.push('/bottom/decks')}
                 >
-                    <Text style={styles.buttonText}>Go Back</Text>
+                    <Text style={styles.buttonText}>Quay lại</Text>
                 </TouchableOpacity>
             </SafeAreaView>
         )
@@ -122,7 +121,6 @@ const DeckDetailScreen = () => {
         <SafeAreaView style={styles.safeArea}>
             <StatusBar barStyle="dark-content" />
 
-            {/* Header */}
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => router.push('/bottom/decks')}>
                     <Ionicons name="arrow-back" size={24} color="#333" />
@@ -135,7 +133,6 @@ const DeckDetailScreen = () => {
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.scrollContent}
             >
-                {/* Carousel */}
                 <View style={styles.carouselContainer}>
                     <FlashcardFlipCarousel
                         data={deck.flashcards}
@@ -144,7 +141,6 @@ const DeckDetailScreen = () => {
                     />
                 </View>
 
-                {/* Navigation */}
                 <View style={styles.navContainer}>
                     <TouchableOpacity
                         style={styles.navButton}
@@ -157,7 +153,7 @@ const DeckDetailScreen = () => {
                                 resizeMode="contain"
                             />
                         </View>
-                        <Text style={styles.navLabel}>Flashcard</Text>
+                        <Text style={styles.navLabel}>Học thẻ</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
@@ -180,7 +176,7 @@ const DeckDetailScreen = () => {
                                 />
                             )}
                         </View>
-                        <Text style={styles.navLabel}>Learn</Text>
+                        <Text style={styles.navLabel}>Luyện tập</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
@@ -199,13 +195,11 @@ const DeckDetailScreen = () => {
                                 resizeMode="contain"
                             />
                         </View>
-                        <Text style={styles.navLabel}>Test</Text>
+                        <Text style={styles.navLabel}>Kiểm tra</Text>
                     </TouchableOpacity>
                 </View>
 
-                {/* Info Sections */}
                 <View style={styles.infoContainer}>
-                    {/* Description */}
                     <View style={styles.section}>
                         <View style={styles.sectionHeader}>
                             <Ionicons
@@ -213,16 +207,15 @@ const DeckDetailScreen = () => {
                                 size={18}
                                 color="#3D5CFF"
                             />
-                            <Text style={styles.sectionTitle}>Description</Text>
+                            <Text style={styles.sectionTitle}>Mô tả</Text>
                         </View>
                         <View style={styles.descriptionBox}>
                             <Text style={styles.description}>
-                                {deck.description || 'No description available'}
+                                {deck.description || 'Chưa có mô tả'}
                             </Text>
                         </View>
                     </View>
 
-                    {/* Visibility */}
                     <View style={styles.section}>
                         <View style={styles.sectionHeader}>
                             <Ionicons
@@ -234,7 +227,9 @@ const DeckDetailScreen = () => {
                                 size={18}
                                 color="#3D5CFF"
                             />
-                            <Text style={styles.sectionTitle}>Visibility</Text>
+                            <Text style={styles.sectionTitle}>
+                                Quyền riêng tư
+                            </Text>
                         </View>
                         <View
                             style={[
@@ -267,14 +262,13 @@ const DeckDetailScreen = () => {
                                 ]}
                             >
                                 {deck.visibility === 'private'
-                                    ? 'Private'
-                                    : 'Public'}
+                                    ? 'Riêng tư'
+                                    : 'Công khai'}
                             </Text>
                         </View>
                     </View>
                 </View>
 
-                {/* Preview Flashcards */}
                 <View style={styles.previewContainer}>
                     <View style={styles.sectionHeader}>
                         <Ionicons
@@ -283,7 +277,7 @@ const DeckDetailScreen = () => {
                             color="#3D5CFF"
                         />
                         <Text style={styles.sectionTitle}>
-                            Preview flashcards
+                            Xem trước các thẻ
                         </Text>
                     </View>
 
@@ -292,7 +286,7 @@ const DeckDetailScreen = () => {
                             <View style={styles.flashcardTerm}>
                                 <View style={styles.termHeader}>
                                     <Text style={styles.previewLabel}>
-                                        Term
+                                        Mặt trước
                                     </Text>
                                     <View style={styles.termIndicator} />
                                 </View>
@@ -303,7 +297,7 @@ const DeckDetailScreen = () => {
                             <View style={styles.flashcardDefinition}>
                                 <View style={styles.definitionHeader}>
                                     <Text style={styles.previewLabel}>
-                                        Definition
+                                        Mặt sau
                                     </Text>
                                     <View style={styles.definitionIndicator} />
                                 </View>
@@ -320,10 +314,7 @@ const DeckDetailScreen = () => {
 }
 
 const styles = StyleSheet.create({
-    safeArea: {
-        flex: 1,
-        backgroundColor: '#FFF',
-    },
+    safeArea: { flex: 1, backgroundColor: '#FFF' },
     container: { flex: 1, backgroundColor: '#F8F9FD' },
     header: {
         flexDirection: 'row',

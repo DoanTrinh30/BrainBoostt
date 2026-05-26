@@ -46,6 +46,9 @@ services:
       - DATABASE_PASSWORD=dong
       - DATABASE_NAME=brainboost
       - SALT_ROUNDS=1
+    volumes:                                          
+      - ./BrainBoost-backend:/app                     
+      - /app/node_modules
     ports:
       - "3000:3000"
     depends_on:

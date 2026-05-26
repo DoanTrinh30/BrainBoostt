@@ -1,13 +1,6 @@
 import { Ionicons } from '@expo/vector-icons'
 import { Tabs } from 'expo-router'
-import {
-    View,
-    StyleSheet,
-    Modal,
-    Text,
-    TouchableOpacity,
-    TouchableWithoutFeedback,
-} from 'react-native'
+import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import { useMemo, useState } from 'react'
 import { useRouter } from 'expo-router'
 import { OptionModal } from '@/components/others'
@@ -16,38 +9,34 @@ export default function TabLayout() {
     const [modalVisible, setModalVisible] = useState(false)
     const router = useRouter()
 
-    const handleAddPress = () => {
-        setModalVisible(true)
-    }
+    const handleAddPress = () => setModalVisible(true)
 
     const handleCreateDeck = () => {
         setModalVisible(false)
         router.push('/decks/adddeck')
     }
 
-    const handleCloseModal = () => {
-        setModalVisible(false)
-    }
+    const handleCloseModal = () => setModalVisible(false)
 
     const options = useMemo(
         () => [
             {
                 icon: 'albums-outline',
-                text: 'Deck',
-                description: 'Revise material easily',
+                text: 'Bộ thẻ',
+                description: 'Ôn tập kiến thức dễ dàng',
                 onPress: handleCreateDeck,
             },
             {
                 icon: 'folder-outline',
-                text: 'Folder',
-                description: 'Organize your study materials',
+                text: 'Thư mục',
+                description: 'Sắp xếp tài liệu học tập',
                 disabled: true,
                 onPress: () => {},
             },
             {
                 icon: 'people-outline',
-                text: 'Class',
-                description: 'Share sets and study together',
+                text: 'Lớp học',
+                description: 'Chia sẻ bộ thẻ và học cùng nhau',
                 disabled: true,
                 onPress: () => {},
             },
@@ -61,7 +50,7 @@ export default function TabLayout() {
                 options={options}
                 modalVisible={modalVisible}
                 setModalVisible={setModalVisible}
-                headerText="Create a new set"
+                headerText="Tạo mới"
                 handleCloseModal={handleCloseModal}
             />
 
@@ -97,7 +86,7 @@ export default function TabLayout() {
                 <Tabs.Screen
                     name="home"
                     options={{
-                        title: 'Home',
+                        title: 'Trang chủ',
                         headerShown: false,
                         tabBarIcon: ({ color, size }) => (
                             <Ionicons name="home" size={size} color={color} />
@@ -107,7 +96,7 @@ export default function TabLayout() {
                 <Tabs.Screen
                     name="decks"
                     options={{
-                        title: 'Decks',
+                        title: 'Bộ thẻ',
                         headerShown: false,
                         tabBarIcon: ({ color, size }) => (
                             <Ionicons
@@ -121,8 +110,8 @@ export default function TabLayout() {
                 <Tabs.Screen
                     name="add"
                     options={{
-                        title: 'Add',
-                        tabBarIcon: ({ color }) => (
+                        title: 'Thêm',
+                        tabBarIcon: () => (
                             <TouchableOpacity
                                 onPress={handleAddPress}
                                 activeOpacity={0.8}
@@ -148,7 +137,6 @@ export default function TabLayout() {
                     }}
                     listeners={{
                         tabPress: (e) => {
-                            // Prevent default navigation
                             e.preventDefault()
                             handleAddPress()
                         },
@@ -157,7 +145,7 @@ export default function TabLayout() {
                 <Tabs.Screen
                     name="notification"
                     options={{
-                        title: 'Notification',
+                        title: 'Thông báo',
                         tabBarIcon: ({ color, size }) => (
                             <Ionicons
                                 name="notifications"
@@ -171,7 +159,7 @@ export default function TabLayout() {
                 <Tabs.Screen
                     name="profile"
                     options={{
-                        title: 'Profile',
+                        title: 'Hồ sơ',
                         tabBarIcon: ({ color, size }) => (
                             <Ionicons name="person" size={size} color={color} />
                         ),
@@ -206,85 +194,5 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderWidth: 2,
         borderColor: '#FFFFFF',
-    },
-    modalOverlay: {
-        flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        justifyContent: 'flex-end',
-    },
-    modalView: {
-        backgroundColor: 'white',
-        borderTopLeftRadius: 25,
-        borderTopRightRadius: 25,
-        padding: 20,
-        width: '100%',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: -3,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5,
-        paddingBottom: 40,
-    },
-    modalHeader: {
-        alignItems: 'center',
-        marginBottom: 20,
-    },
-    modalHandleBar: {
-        width: 40,
-        height: 5,
-        backgroundColor: '#E0E0E0',
-        borderRadius: 3,
-        marginBottom: 15,
-    },
-    modalTitle: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#333',
-        marginBottom: 10,
-        textAlign: 'center',
-    },
-    optionButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 16,
-        borderRadius: 15,
-        marginBottom: 12,
-        backgroundColor: '#F5F7FF',
-    },
-    optionIconContainer: {
-        width: 50,
-        height: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F0F3FF',
-        borderRadius: 15,
-        marginRight: 16,
-    },
-    optionTextContainer: {
-        flex: 1,
-    },
-    optionText: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: '#333',
-        marginBottom: 4,
-    },
-    optionDescription: {
-        fontSize: 14,
-        color: '#666',
-    },
-    optionTagContainer: {
-        backgroundColor: '#EEF1FF',
-        paddingHorizontal: 10,
-        paddingVertical: 4,
-        borderRadius: 12,
-    },
-    optionTagText: {
-        fontSize: 12,
-        color: '#3D5CFF',
-        fontWeight: '500',
     },
 })

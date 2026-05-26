@@ -22,33 +22,33 @@ export default function SettingsScreen() {
     const settingsOptions = [
         {
             iconName: 'person-circle-outline',
-            label: 'Account Setting',
+            label: 'Tài khoản',
             onPress: () => router.push('/user/editprofile'),
         },
         {
             iconName: 'key-outline',
-            label: 'Change Password',
+            label: 'Đổi mật khẩu',
             onPress: () => router.push('/user/changepassword'),
         },
         {
             iconName: 'shield-checkmark-outline',
-            label: 'Privacy',
+            label: 'Quyền riêng tư',
             onPress: () => {},
         },
-        { iconName: 'star-outline', label: 'Feedback', onPress: () => {} },
+        { iconName: 'star-outline', label: 'Góp ý', onPress: () => {} },
         {
             iconName: 'information-circle-outline',
-            label: 'Help',
+            label: 'Trợ giúp',
             onPress: () => {},
         },
         {
             iconName: 'chatbubble-ellipses-outline',
-            label: 'Contact',
+            label: 'Liên hệ',
             onPress: () => {},
         },
         {
             iconName: 'document-text-outline',
-            label: 'Terms of service',
+            label: 'Điều khoản dịch vụ',
             onPress: () => {},
         },
     ]
@@ -59,8 +59,8 @@ export default function SettingsScreen() {
             dispatch(logout())
             Toast.show({
                 type: 'success',
-                text1: 'Logout successful',
-                text2: 'You have been logged out successfully.',
+                text1: 'Đăng xuất thành công',
+                text2: 'Bạn đã đăng xuất khỏi tài khoản.',
                 position: 'top',
             })
             router.replace('/auth/login')
@@ -78,7 +78,7 @@ export default function SettingsScreen() {
                     color="black"
                     onPress={() => router.back()}
                 />
-                <Text style={styles.headerTitle}>Settings</Text>
+                <Text style={styles.headerTitle}>Cài đặt</Text>
                 <View style={{ width: 24 }} />
             </View>
 
@@ -97,7 +97,7 @@ export default function SettingsScreen() {
                         style={styles.signOutBtn}
                         onPress={handleSignOut}
                     >
-                        <Text style={styles.signOutText}>Sign out</Text>
+                        <Text style={styles.signOutText}>Đăng xuất</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>

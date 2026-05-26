@@ -30,15 +30,11 @@ export default function LoginScreen() {
         mutationFn: signIn,
         onSuccess: async (data) => {
             await AsyncStorage.setItem('token', data.token)
-            dispatch(
-                setCredentials({
-                    accessToken: data.token,
-                }),
-            )
+            dispatch(setCredentials({ accessToken: data.token }))
             Toast.show({
                 type: 'success',
-                text1: 'Login successful',
-                text2: 'Welcome back to BrainBoost!',
+                text1: 'Đăng nhập thành công',
+                text2: 'Chào mừng quay lại BrainBoost!',
                 position: 'top',
             })
             router.push('/bottom/home')
@@ -46,10 +42,10 @@ export default function LoginScreen() {
         onError: (error) => {
             Toast.show({
                 type: 'error',
-                text1: 'Login error',
+                text1: 'Đăng nhập thất bại',
                 text2:
                     error.message ||
-                    'An unexpected error occurred. Please try again.',
+                    'Có lỗi xảy ra. Vui lòng thử lại.',
                 position: 'top',
             })
         },
@@ -59,13 +55,12 @@ export default function LoginScreen() {
         if (!email || !password) {
             Toast.show({
                 type: 'info',
-                text1: 'Missing information',
-                text2: 'Please enter your email and password.',
+                text1: 'Thiếu thông tin',
+                text2: 'Vui lòng nhập email và mật khẩu.',
                 position: 'top',
             })
             return
         }
-
         mutation.mutate({ email, password })
     }
 
@@ -75,23 +70,23 @@ export default function LoginScreen() {
         <SafeAreaView style={styles.safeArea}>
             <View style={styles.container}>
                 <View style={styles.content}>
-                    <Text style={styles.title}>Log In</Text>
+                    <Text style={styles.title}>Đăng nhập</Text>
 
                     <TextField
-                        label="Your Email"
+                        label="Email của bạn"
                         value={email}
                         onChangeText={setEmail}
-                        placeholder="Enter your email"
+                        placeholder="Nhập email"
                         keyboardType="email-address"
                         autoCapitalize="none"
                         isEmail={true}
                     />
 
                     <PasswordField
-                        label="Password"
+                        label="Mật khẩu"
                         value={password}
                         onChangeText={setPassword}
-                        placeholder="Enter your password"
+                        placeholder="Nhập mật khẩu"
                         isPasswordVisible={isPasswordVisible}
                         togglePasswordVisibility={() =>
                             setIsPasswordVisible(!isPasswordVisible)
@@ -100,24 +95,24 @@ export default function LoginScreen() {
 
                     <TouchableOpacity style={styles.forgotPassword}>
                         <Text style={styles.forgotPasswordText}>
-                            Forget password?
+                            Quên mật khẩu?
                         </Text>
                     </TouchableOpacity>
 
                     <SubmitButton
-                        text="Log In"
+                        text="Đăng nhập"
                         onPress={handleLogin}
                         style={styles.loginButton}
                         textStyle={styles.loginText}
                     />
 
                     <OtherOption
-                        textContent={"Don't have an account?"}
-                        linkContent={'Sign up'}
+                        textContent={'Chưa có tài khoản?'}
+                        linkContent={'Đăng ký'}
                         onPress={navigateToSignUp}
                     />
 
-                    <DividerWithText text="Or login with" />
+                    <DividerWithText text="Hoặc đăng nhập với" />
 
                     <ThirdPartyContainer>
                         <ThirdPartyButton iconName="logo-google" size={40}>
@@ -134,10 +129,7 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-    safeArea: {
-        flex: 1,
-        backgroundColor: '#F7F7F7',
-    },
+    safeArea: { flex: 1, backgroundColor: '#F7F7F7' },
     container: {
         flex: 1,
         alignItems: 'center',

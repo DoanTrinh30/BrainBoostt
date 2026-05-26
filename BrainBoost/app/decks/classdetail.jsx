@@ -16,7 +16,7 @@ import MembersList from '../../components/containers/MembersList'
 
 const ClassDetailScreen = () => {
     const router = useRouter()
-    const { classTitle: initialClassTitle = 'Name Class', selectedDecks } =
+    const { classTitle: initialClassTitle = 'Tên lớp', selectedDecks } =
         useLocalSearchParams()
 
     const [classTitle, setClassTitle] = useState(initialClassTitle)
@@ -36,11 +36,8 @@ const ClassDetailScreen = () => {
         }
     }, [selectedDecks])
 
-    // Khi hoàn thành chỉnh sửa tên lớp
     const handleSubmitTitle = () => {
         setIsEditingTitle(false)
-        // TODO: Gọi API cập nhật tên lớp nếu cần
-        // ví dụ: updateClassTitle(classTitle)
     }
 
     const handleAddDeck = useCallback(() => {
@@ -53,7 +50,6 @@ const ClassDetailScreen = () => {
 
     return (
         <View style={styles.container}>
-            {/* Header */}
             <View style={styles.header}>
                 <TouchableOpacity
                     onPress={() => router.back()}
@@ -100,7 +96,6 @@ const ClassDetailScreen = () => {
                 </View>
             </View>
 
-            {/* Tabs */}
             <View style={styles.tabBar}>
                 {['Modules', 'Members'].map((tab) => (
                     <TouchableOpacity
@@ -117,29 +112,28 @@ const ClassDetailScreen = () => {
                                 activeTab === tab && styles.activeTabText,
                             ]}
                         >
-                            {tab === 'Modules' ? 'Decks' : 'Members'}
+                            {tab === 'Modules' ? 'Bộ thẻ' : 'Thành viên'}
                         </Text>
                     </TouchableOpacity>
                 ))}
             </View>
 
-            {/* Content */}
             <ScrollView contentContainerStyle={styles.content}>
                 {activeTab === 'Modules' ? (
                     modules.length === 0 ? (
                         <View style={styles.emptyBox}>
                             <Text style={styles.emptyTitle}>
-                                This class has no decks yet.
+                                Lớp này chưa có bộ thẻ nào.
                             </Text>
                             <Text style={styles.emptyDesc}>
-                                Add or create a deck to get started.
+                                Thêm hoặc tạo bộ thẻ để bắt đầu.
                             </Text>
                             <TouchableOpacity
                                 onPress={handleAddDeck}
                                 style={styles.addButton}
                             >
                                 <Text style={styles.addButtonText}>
-                                    Add Deck
+                                    Thêm bộ thẻ
                                 </Text>
                             </TouchableOpacity>
                         </View>
@@ -164,7 +158,6 @@ const ClassDetailScreen = () => {
                 )}
             </ScrollView>
 
-            {/* Modal bottom sheet */}
             <BottomModal
                 isVisible={isMoreVisible}
                 onClose={() => setIsMoreVisible(false)}
@@ -184,15 +177,8 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     backButton: { paddingRight: 10 },
-    headerContent: {
-        flex: 1,
-        marginLeft: 12,
-    },
-    classTitle: {
-        color: '#000',
-        fontSize: 24,
-        fontWeight: 'bold',
-    },
+    headerContent: { flex: 1, marginLeft: 12 },
+    classTitle: { color: '#000', fontSize: 24, fontWeight: 'bold' },
     classTitleInput: {
         fontSize: 24,
         fontWeight: 'bold',
@@ -201,10 +187,7 @@ const styles = StyleSheet.create({
         paddingVertical: 2,
         color: '#000',
     },
-    headerIcons: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
+    headerIcons: { flexDirection: 'row', alignItems: 'center' },
     moreButton: { marginLeft: 16 },
     tabBar: {
         flexDirection: 'row',
@@ -212,28 +195,11 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
     },
-    tabItem: {
-        flex: 1,
-        paddingVertical: 10,
-        alignItems: 'center',
-    },
-    activeTabItem: {
-        borderBottomWidth: 2,
-        borderBottomColor: '#3D5CFF',
-    },
-    tabText: {
-        color: '#888',
-        fontSize: 16,
-    },
-    activeTabText: {
-        color: '#3D5CFF',
-        fontWeight: 'bold',
-    },
-    content: {
-        flexGrow: 1,
-        justifyContent: 'center',
-        padding: 20,
-    },
+    tabItem: { flex: 1, paddingVertical: 10, alignItems: 'center' },
+    activeTabItem: { borderBottomWidth: 2, borderBottomColor: '#3D5CFF' },
+    tabText: { color: '#888', fontSize: 16 },
+    activeTabText: { color: '#3D5CFF', fontWeight: 'bold' },
+    content: { flexGrow: 1, justifyContent: 'center', padding: 20 },
     emptyBox: {
         backgroundColor: '#F7F7F7',
         borderRadius: 12,
@@ -259,11 +225,7 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         paddingHorizontal: 24,
     },
-    addButtonText: {
-        color: '#fff',
-        fontWeight: 'bold',
-        fontSize: 16,
-    },
+    addButtonText: { color: '#fff', fontWeight: 'bold', fontSize: 16 },
 })
 
 export default ClassDetailScreen

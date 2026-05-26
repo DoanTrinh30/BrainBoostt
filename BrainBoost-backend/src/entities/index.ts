@@ -4,3 +4,4 @@ export { Folder } from "./Folder";
 export { Role } from "./Role";
 export { Class } from "./Class";
 export { Flashcard } from "./Flashcard";
+export { ReviewLog } from "./ReviewLog";

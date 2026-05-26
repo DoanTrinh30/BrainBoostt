@@ -15,9 +15,9 @@ import {
 import { Ionicons } from '@expo/vector-icons'
 
 const LEVELS = [
-    { id: 'beginner', label: 'Beginner', icon: 'school-outline' },
-    { id: 'intermediate', label: 'Intermediate', icon: 'book-outline' },
-    { id: 'advanced', label: 'Advanced', icon: 'ribbon-outline' },
+    { id: 'beginner', label: 'Cơ bản', icon: 'school-outline' },
+    { id: 'intermediate', label: 'Trung cấp', icon: 'book-outline' },
+    { id: 'advanced', label: 'Nâng cao', icon: 'ribbon-outline' },
 ]
 
 const QUANTITY_OPTIONS = [
@@ -62,15 +62,8 @@ const AIGenerateModal = ({
     }, [visible])
 
     const handleGenerate = () => {
-        if (!topic.trim()) {
-            return
-        }
-
-        onGenerate({
-            topic,
-            level,
-            quantity,
-        })
+        if (!topic.trim()) return
+        onGenerate({ topic, level, quantity })
     }
 
     const handleBackdropPress = () => {
@@ -97,10 +90,9 @@ const AIGenerateModal = ({
                                 },
                             ]}
                         >
-                            {/* Modal Header */}
                             <View style={styles.header}>
                                 <Text style={styles.headerTitle}>
-                                    Generate Flashcards with AI
+                                    Tạo thẻ học bằng AI
                                 </Text>
                                 <TouchableOpacity
                                     style={styles.closeButton}
@@ -115,13 +107,14 @@ const AIGenerateModal = ({
                             </View>
 
                             <ScrollView style={styles.modalContent}>
-                                {/* Topic Input */}
                                 <View style={styles.inputGroup}>
-                                    <Text style={styles.inputLabel}>Topic</Text>
+                                    <Text style={styles.inputLabel}>
+                                        Chủ đề
+                                    </Text>
                                     <View style={styles.inputContainer}>
                                         <TextInput
                                             style={styles.input}
-                                            placeholder="Enter a topic (e.g. Capitals of Europe)"
+                                            placeholder="Nhập chủ đề (vd: Trái cây, Động vật, Thủ đô châu Âu)"
                                             value={topic}
                                             onChangeText={setTopic}
                                             placeholderTextColor="#999"
@@ -129,9 +122,10 @@ const AIGenerateModal = ({
                                     </View>
                                 </View>
 
-                                {/* Level Selection */}
                                 <View style={styles.inputGroup}>
-                                    <Text style={styles.inputLabel}>Level</Text>
+                                    <Text style={styles.inputLabel}>
+                                        Trình độ
+                                    </Text>
                                     <View style={styles.levelContainer}>
                                         {LEVELS.map((item) => (
                                             <TouchableOpacity
@@ -168,10 +162,9 @@ const AIGenerateModal = ({
                                     </View>
                                 </View>
 
-                                {/* Quantity Selection */}
                                 <View style={styles.inputGroup}>
                                     <Text style={styles.inputLabel}>
-                                        Number of Flashcards
+                                        Số lượng thẻ
                                     </Text>
                                     <View style={styles.quantityContainer}>
                                         {QUANTITY_OPTIONS.map((item) => (
@@ -201,7 +194,6 @@ const AIGenerateModal = ({
                                     </View>
                                 </View>
 
-                                {/* Submit Button */}
                                 <TouchableOpacity
                                     style={styles.generateButton}
                                     onPress={handleGenerate}
@@ -224,7 +216,7 @@ const AIGenerateModal = ({
                                                     styles.generateButtonText
                                                 }
                                             >
-                                                Generate
+                                                Tạo ngay
                                             </Text>
                                         </>
                                     )}
@@ -267,21 +259,10 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#F0F0F0',
     },
-    headerTitle: {
-        fontSize: 18,
-        fontWeight: '700',
-        color: '#333',
-    },
-    closeButton: {
-        padding: 5,
-    },
-    modalContent: {
-        padding: 20,
-        maxHeight: 500,
-    },
-    inputGroup: {
-        marginBottom: 20,
-    },
+    headerTitle: { fontSize: 18, fontWeight: '700', color: '#333' },
+    closeButton: { padding: 5 },
+    modalContent: { padding: 20, maxHeight: 500 },
+    inputGroup: { marginBottom: 20 },
     inputLabel: {
         fontSize: 16,
         fontWeight: '600',
@@ -321,14 +302,12 @@ const styles = StyleSheet.create({
         borderColor: '#3D5CFF',
     },
     levelText: {
-        fontSize: 10,
+        fontSize: 11,
         fontWeight: '500',
         color: '#666',
         marginLeft: 5,
     },
-    levelTextSelected: {
-        color: '#3D5CFF',
-    },
+    levelTextSelected: { color: '#3D5CFF' },
     quantityContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -348,14 +327,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#EBF3FF',
         borderColor: '#3D5CFF',
     },
-    quantityText: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: '#666',
-    },
-    quantityTextSelected: {
-        color: '#3D5CFF',
-    },
+    quantityText: { fontSize: 16, fontWeight: '600', color: '#666' },
+    quantityTextSelected: { color: '#3D5CFF' },
     generateButton: {
         backgroundColor: '#3D5CFF',
         borderRadius: 12,

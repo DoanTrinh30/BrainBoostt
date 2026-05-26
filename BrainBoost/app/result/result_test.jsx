@@ -71,8 +71,8 @@ const ResultTestScreen = () => {
                 onClose={navigateToDeck}
             />
             <ScrollView contentContainerStyle={styles.content}>
-                <Text style={styles.title}>You're making progress!</Text>
-                <Text style={styles.subtitle}>Your results</Text>
+                <Text style={styles.title}>Bạn đang tiến bộ rồi!</Text>
+                <Text style={styles.subtitle}>Kết quả của bạn</Text>
 
                 <ProgressCircle
                     size={SIZE}
@@ -148,13 +148,13 @@ const ProgressCircle = ({
 const ResultBadges = ({ correct, incorrectCount }) => (
     <View style={styles.resultRow}>
         <View style={styles.resultItem}>
-            <Text style={styles.correctLabel}>Correct</Text>
+            <Text style={styles.correctLabel}>Đúng</Text>
             <View style={styles.badgeCorrect}>
                 <Text style={styles.badgeText}>{correct}</Text>
             </View>
         </View>
         <View style={styles.resultItem}>
-            <Text style={styles.incorrectLabel}>Incorrect</Text>
+            <Text style={styles.incorrectLabel}>Sai</Text>
             <View style={styles.badgeIncorrect}>
                 <Text style={styles.badgeText}>{incorrectCount}</Text>
             </View>
@@ -164,9 +164,9 @@ const ResultBadges = ({ correct, incorrectCount }) => (
 
 const NextSteps = ({ onRetake }) => (
     <>
-        <Text style={styles.nextSteps}>Next steps</Text>
+        <Text style={styles.nextSteps}>Bước tiếp theo</Text>
         <SubmitButton
-            text="Take a new test"
+            text="Làm bài kiểm tra mới"
             onPress={onRetake}
             style={styles.retakeButton}
         />
@@ -175,15 +175,15 @@ const NextSteps = ({ onRetake }) => (
 
 const IncorrectAnswersList = ({ incorrectList }) => (
     <View style={styles.incorrectSection}>
-        <Text style={styles.sectionHeader}>Incorrect answers</Text>
+        <Text style={styles.sectionHeader}>Các câu trả lời sai</Text>
         {incorrectList.map((item, index) => (
             <View key={index} style={styles.card}>
                 <View style={styles.cardContent}>
                     <Text style={styles.questionText}>
-                        Q{index + 1}: {item.question}
+                        Câu {index + 1}: {item.question}
                     </Text>
                     <Text style={styles.definition}>
-                        Correct answer:{' '}
+                        Đáp án đúng:{' '}
                         <Text style={styles.correctAns}>
                             {item.correctAnswer}
                         </Text>

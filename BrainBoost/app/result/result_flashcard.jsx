@@ -81,18 +81,18 @@ const FlashcardResultScreen = () => {
     let iconColor = ''
 
     if (isPerfect) {
-        title = 'Congratulations!'
-        subtitle = 'You remembered all the flashcards!'
+        title = 'Xuất sắc!'
+        subtitle = 'Bạn đã nhớ hết tất cả thẻ!'
         icon = 'trophy-outline'
         iconColor = '#FFD700'
     } else if (isMoreThanHalf) {
-        title = 'Great job!'
-        subtitle = 'You remembered more than half! Keep it up.'
+        title = 'Làm tốt lắm!'
+        subtitle = 'Bạn đã nhớ được hơn một nửa. Tiếp tục phát huy nhé!'
         icon = 'happy-outline'
         iconColor = '#33D9A6'
     } else {
-        title = 'Keep going!'
-        subtitle = "You're making progress. Practice makes perfect!"
+        title = 'Cố lên nào!'
+        subtitle = 'Bạn đang tiến bộ. Luyện tập là chìa khóa thành công!'
         icon = 'rocket-outline'
         iconColor = '#3D5CFF'
     }
@@ -127,7 +127,7 @@ const FlashcardResultScreen = () => {
                 <Text style={styles.subtitle}>{subtitle}</Text>
                 <Text style={styles.scoreText}>
                     <Text style={styles.scoreNumber}>{correctCount}</Text>
-                    <Text style={styles.scoreTotal}> / {total} remembered</Text>
+                    <Text style={styles.scoreTotal}> / {total} thẻ đã nhớ</Text>
                 </Text>
                 <View style={styles.buttonRow}>
                     <TouchableOpacity
@@ -140,7 +140,7 @@ const FlashcardResultScreen = () => {
                             color="#fff"
                             style={{ marginRight: 6 }}
                         />
-                        <Text style={styles.tryAgainText}>Try Again</Text>
+                        <Text style={styles.tryAgainText}>Học lại</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.backButton}
@@ -152,7 +152,7 @@ const FlashcardResultScreen = () => {
                             color="#3D5CFF"
                             style={{ marginRight: 6 }}
                         />
-                        <Text style={styles.backText}>Back to Deck</Text>
+                        <Text style={styles.backText}>Về bộ thẻ</Text>
                     </TouchableOpacity>
                 </View>
             </View>

@@ -43,7 +43,7 @@ export const generateWrongAnswer = (correctAnswer, allFlashcards) => {
     }
 
     // Fallback if no other answers available
-    return `Not ${correctAnswer}`
+    return `Không phải ${correctAnswer}`
 }
 
 /**
@@ -103,9 +103,9 @@ export const generateTestQuestions = (
                     id: idx + 1,
                     type: 'trueFalse',
                     flashcard: card,
-                    question: `Is "${card.frontText}" correctly defined as "${displayedDefinition}"?`,
-                    options: ['True', 'False'],
-                    correctAnswer: isCorrectDefinition ? 'True' : 'False',
+                    question: `"${card.frontText}" có nghĩa là "${displayedDefinition}" — đúng hay sai?`,
+                    options: ['Đúng', 'Sai'],
+                    correctAnswer: isCorrectDefinition ? 'Đúng' : 'Sai',
                     displayedDefinition: displayedDefinition,
                     actualDefinition: card.backText,
                     isCorrectPairing: isCorrectDefinition,
@@ -116,7 +116,7 @@ export const generateTestQuestions = (
                     id: idx + 1,
                     type: 'written',
                     flashcard: card,
-                    question: `What is the definition of "${card.frontText}"?`,
+                    question: `Định nghĩa của "${card.frontText}" là gì?`,
                     correctAnswer: card.backText,
                 }
 
@@ -135,7 +135,7 @@ export const generateTestQuestions = (
                     id: idx + 1,
                     type: 'multipleChoice',
                     flashcard: card,
-                    question: `What is the definition of "${card.frontText}"?`,
+                    question: `Định nghĩa của "${card.frontText}" là gì?`,
                     options,
                     correctAnswer: card.backText,
                 }

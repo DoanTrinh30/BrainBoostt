@@ -137,7 +137,7 @@ const SetupTestScreen = () => {
     const formatDate = (timestamp) => {
         if (!timestamp) return ''
         const date = new Date(timestamp)
-        return date.toLocaleDateString('en-US', {
+        return date.toLocaleDateString('vi-VN', {
             month: 'short',
             day: 'numeric',
             hour: '2-digit',
@@ -169,7 +169,7 @@ const SetupTestScreen = () => {
                 <TouchableOpacity onPress={handleBack}>
                     <Ionicons name="arrow-back" size={24} color="#333" />
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>Setup Test</Text>
+                <Text style={styles.headerTitle}>Thiết lập bài kiểm tra</Text>
                 <View style={{ width: 24 }} />
             </View>
 
@@ -186,8 +186,8 @@ const SetupTestScreen = () => {
 
                 {/* Question Count Section */}
                 <SectionCard
-                    title="Question count"
-                    subtitle={`(max ${parsedFlashcards.length})`}
+                    title="Số câu hỏi"
+                    subtitle={`(tối đa ${parsedFlashcards.length})`}
                     icon="help-circle-outline"
                 >
                     <QuestionCountInput
@@ -198,7 +198,7 @@ const SetupTestScreen = () => {
                     />
 
                     <QuickSelect
-                        label="Quick select:"
+                        label="Chọn nhanh:"
                         options={quickSelectOptions}
                         selectedValue={testConfig.questionCount}
                         onSelect={handleQuickSelect}
@@ -206,9 +206,9 @@ const SetupTestScreen = () => {
                 </SectionCard>
 
                 {/* Question Types Section */}
-                <SectionCard title="Question types" icon="list-outline">
+                <SectionCard title="Dạng câu hỏi" icon="list-outline">
                     <SettingToggle
-                        label="True / False"
+                        label="Đúng / Sai"
                         value={testConfig.options.includeTrueFalse}
                         onValueChange={(value) =>
                             updateOption('includeTrueFalse', value)
@@ -216,7 +216,7 @@ const SetupTestScreen = () => {
                     />
 
                     <SettingToggle
-                        label="Multiple choice"
+                        label="Trắc nghiệm"
                         value={testConfig.options.includeMultipleChoice}
                         onValueChange={() => {}}
                         disabled={true}
@@ -224,7 +224,7 @@ const SetupTestScreen = () => {
                     />
 
                     <SettingToggle
-                        label="Written"
+                        label="Tự luận"
                         value={testConfig.options.includeWritten}
                         onValueChange={(value) =>
                             updateOption('includeWritten', value)
@@ -233,9 +233,9 @@ const SetupTestScreen = () => {
                 </SectionCard>
 
                 {/* Settings Section */}
-                <SectionCard title="Settings" icon="chatbox-ellipses-outline">
+                <SectionCard title="Cài đặt" icon="chatbox-ellipses-outline">
                     <SettingToggle
-                        label="Instant feedback"
+                        label="Hiện đáp án ngay"
                         value={testConfig.options.instantFeedback}
                         onValueChange={(value) =>
                             updateOption('instantFeedback', value)
@@ -247,7 +247,7 @@ const SetupTestScreen = () => {
             {/* Start Test Button */}
             <View style={styles.buttonContainer}>
                 <SubmitButton
-                    text="Start test"
+                    text="Bắt đầu kiểm tra"
                     onPress={handleStartTest}
                     style={styles.startButton}
                 />

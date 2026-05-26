@@ -4,6 +4,7 @@ import { HomeController } from '../controllers/HomeController';
 import { DeckController } from '../controllers/DeckController';
 import { ProfileController } from '../controllers/ProfileController';
 import { FolderController } from '../controllers/FolderController';
+import { ReviewLogController } from '../controllers/ReviewLogController';
 import { authMiddleware, AuthenticatedRequest } from '../middlewares/authMiddleware';
 
 const router = Router();
@@ -12,6 +13,7 @@ const deckController = new DeckController();
 const profileController = new ProfileController();
 const folderController = new FolderController()
 const flashcardController = new FlashcardController()
+const reviewLogController = new ReviewLogController();
 
 /**
  * @swagger
@@ -450,5 +452,145 @@ router.get('/total_flashcards', authMiddleware, (req: Request, res: Response) =>
     flashcardController.getQuantity(req as AuthenticatedRequest, res)
 );
 
+// ===== Review Logs (ML-powered Spaced Repetition) =====
 
+/**
+ * @swagger
+ * /api/review-logs:
+ *   post:
+ *     summary: Create a review log when user answers a flashcard
+ *     tags: [ReviewLogs]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - flashcardId
+ *               - isCorrect
+ *               - responseTimeMs
+ *             properties:
+ *               flashcardId:
+ *                 type: string
+ *                 format: uuid
+ *               isCorrect:
+ *                 type: boolean
+ *               responseTimeMs:
+ *                 type: integer
+ *               difficulty:
+ *                 type: string
+ *                 enum: [easy, medium, hard]
+ *     responses:
+ *       201:
+ *         description: Review log created with ML prediction
+ *       400:
+ *         description: Missing required fields
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Flashcard not found
+ */
+router.post('/review-logs', authMiddleware, (req: Request, res: Response) =>
+    reviewLogController.create(req as AuthenticatedRequest, res)
+);
+
+/**
+ * @swagger
+ * /api/review-logs/stats:
+ *   get:
+ *     summary: Get user's learning statistics
+ *     tags: [ReviewLogs]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User stats retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ */
+router.get('/review-logs/stats', authMiddleware, (req: Request, res: Response) =>
+    reviewLogController.getStats(req as AuthenticatedRequest, res)
+);
+
+/**
+ * @swagger
+ * /api/review-logs/recommend:
+ *   get:
+ *     summary: Get ML-recommended flashcards to review (Spaced Repetition)
+ *     tags: [ReviewLogs]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: limit
+ *         in: query
+ *         description: Number of recommendations to return (default 10)
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Recommendations sorted by retention probability (lowest first)
+ *       401:
+ *         description: Unauthorized
+ */
+router.get('/review-logs/recommend', authMiddleware, (req: Request, res: Response) =>
+    reviewLogController.getRecommendations(req as AuthenticatedRequest, res)
+);
+
+/**
+ * @swagger
+ * /api/review-logs/history:
+ *   get:
+ *     summary: Get user's review history
+ *     tags: [ReviewLogs]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: limit
+ *         in: query
+ *         description: Number of history items to return (default 20)
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Review history retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ */
+router.get('/review-logs/history', authMiddleware, (req: Request, res: Response) =>
+    reviewLogController.getHistory(req as AuthenticatedRequest, res)
+);
+/**
+ * @swagger
+ * /api/review-logs/weekly-activity:
+ *   get:
+ *     summary: Get user's activity for last 7 days (for BarChart)
+ *     tags: [ReviewLogs]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Weekly activity retrieved
+ */
+router.get('/review-logs/weekly-activity', authMiddleware, (req: Request, res: Response) =>
+    reviewLogController.getWeeklyActivity(req as AuthenticatedRequest, res)
+);
+
+/**
+ * @swagger
+ * /api/review-logs/insights:
+ *   get:
+ *     summary: Get ML-powered AI insights for user
+ *     tags: [ReviewLogs]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: AI insights retrieved
+ */
+router.get('/review-logs/insights', authMiddleware, (req: Request, res: Response) =>
+    reviewLogController.getInsights(req as AuthenticatedRequest, res)
+);
 export default router;

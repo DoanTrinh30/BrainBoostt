@@ -1,0 +1,77 @@
+{
+  "dataset": "Duolingo HLR (real)",
+  "dataset_size": 1500000,
+  "best_model_name": "GradientBoosting",
+  "feature_columns": [
+    "review_count",
+    "days_since_last_review",
+    "previous_accuracy",
+    "response_time_ms",
+    "diff_easy",
+    "diff_medium",
+    "diff_hard",
+    "time_morning",
+    "time_afternoon",
+    "time_evening",
+    "time_night"
+  ],
+  "use_scaler": false,
+  "metrics": {
+    "LogisticRegression": {
+      "accuracy": 0.8728966666666667,
+      "precision": 0.8534681624269237,
+      "recall": 0.9003506993986106,
+      "f1": 0.8762828062593483,
+      "roc_auc": 0.9344782050292324,
+      "training_time_sec": 1.23
+    },
+    "RandomForest": {
+      "accuracy": 0.8761766666666667,
+      "precision": 0.8408518350702311,
+      "recall": 0.9279666102169536,
+      "f1": 0.8822640098126531,
+      "roc_auc": 0.9376448896568177,
+      "training_time_sec": 60.4
+    },
+    "GradientBoosting": {
+      "accuracy": 0.8765466666666667,
+      "precision": 0.8427130616307013,
+      "recall": 0.9258797487765524,
+      "f1": 0.8823409811483794,
+      "roc_auc": 0.9383460688629257,
+      "training_time_sec": 276.69
+    }
+  },
+  "confusion_matrices": {
+    "LogisticRegression": [
+      [
+        126829,
+        23185
+      ],
+      [
+        14946,
+        135040
+      ]
+    ],
+    "RandomForest": [
+      [
+        123671,
+        26343
+      ],
+      [
+        10804,
+        139182
+      ]
+    ],
+    "GradientBoosting": [
+      [
+        124095,
+        25919
+      ],
+      [
+        11117,
+        138869
+      ]
+    ]
+  }
+}

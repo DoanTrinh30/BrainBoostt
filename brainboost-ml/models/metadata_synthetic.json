@@ -1,0 +1,77 @@
+{
+  "dataset": "Synthetic (Ebbinghaus)",
+  "dataset_size": 36978,
+  "best_model_name": "GradientBoosting",
+  "feature_columns": [
+    "review_count",
+    "days_since_last_review",
+    "previous_accuracy",
+    "response_time_ms",
+    "diff_easy",
+    "diff_medium",
+    "diff_hard",
+    "time_morning",
+    "time_afternoon",
+    "time_evening",
+    "time_night"
+  ],
+  "use_scaler": false,
+  "metrics": {
+    "LogisticRegression": {
+      "accuracy": 0.8994050838290968,
+      "precision": 0.8558524651863003,
+      "recall": 0.8629981024667932,
+      "f1": 0.8594104308390023,
+      "roc_auc": 0.9635954607466499,
+      "training_time_sec": 0.03
+    },
+    "RandomForest": {
+      "accuracy": 0.9015684153596538,
+      "precision": 0.8646271510516252,
+      "recall": 0.8580645161290322,
+      "f1": 0.8613333333333333,
+      "roc_auc": 0.9643861195107147,
+      "training_time_sec": 0.42
+    },
+    "GradientBoosting": {
+      "accuracy": 0.9073823688480259,
+      "precision": 0.8668171557562077,
+      "recall": 0.8743833017077799,
+      "f1": 0.8705837899112034,
+      "roc_auc": 0.971106559582184,
+      "training_time_sec": 5.17
+    }
+  },
+  "confusion_matrices": {
+    "LogisticRegression": [
+      [
+        4378,
+        383
+      ],
+      [
+        361,
+        2274
+      ]
+    ],
+    "RandomForest": [
+      [
+        4407,
+        354
+      ],
+      [
+        374,
+        2261
+      ]
+    ],
+    "GradientBoosting": [
+      [
+        4407,
+        354
+      ],
+      [
+        331,
+        2304
+      ]
+    ]
+  }
+}

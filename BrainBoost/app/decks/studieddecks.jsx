@@ -43,13 +43,11 @@ export default function StudiedDecksScreen() {
             })
         }
     }
+
     const handleEditDeck = (deck) => {
         router.push({
             pathname: '/decks/editdeck',
-            params: {
-                id: deck.id,
-                deckData: JSON.stringify(deck),
-            },
+            params: { id: deck.id, deckData: JSON.stringify(deck) },
         })
     }
 
@@ -65,17 +63,17 @@ export default function StudiedDecksScreen() {
             <View style={styles.header}>
                 <View />
                 <TouchableOpacity onPress={handleDone}>
-                    <Text style={styles.doneText}>Done</Text>
+                    <Text style={styles.doneText}>Xong</Text>
                 </TouchableOpacity>
             </View>
 
             <View style={styles.container}>
-                <Text style={styles.title}>Add Deck</Text>
+                <Text style={styles.title}>Thêm bộ thẻ</Text>
                 <TouchableOpacity onPress={() => router.push('/decks/adddeck')}>
-                    <Text style={styles.newSetText}>+ Create new decks</Text>
+                    <Text style={styles.newSetText}>+ Tạo bộ thẻ mới</Text>
                 </TouchableOpacity>
 
-                {isLoading && <Text>Loading...</Text>}
+                {isLoading && <Text>Đang tải...</Text>}
                 {isError && (
                     <Text style={styles.errorText}>Lỗi: {error.message}</Text>
                 )}
@@ -106,26 +104,15 @@ export default function StudiedDecksScreen() {
 }
 
 const styles = StyleSheet.create({
-    safeArea: {
-        flex: 1,
-        backgroundColor: '#fff',
-    },
+    safeArea: { flex: 1, backgroundColor: '#fff' },
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: 16,
     },
-    doneText: {
-        fontSize: 16,
-        color: '#3D5CFF',
-        fontWeight: '600',
-    },
-    container: {
-        paddingHorizontal: 20,
-        flex: 1,
-        backgroundColor: '#fff',
-    },
+    doneText: { fontSize: 16, color: '#3D5CFF', fontWeight: '600' },
+    container: { paddingHorizontal: 20, flex: 1, backgroundColor: '#fff' },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
@@ -139,11 +126,6 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         fontWeight: '500',
     },
-    errorText: {
-        color: 'red',
-        textAlign: 'center',
-    },
-    listContent: {
-        paddingBottom: 30,
-    },
+    errorText: { color: 'red', textAlign: 'center' },
+    listContent: { paddingBottom: 30 },
 })

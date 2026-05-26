@@ -2,6 +2,13 @@ import React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons'
 import { formatDistanceToNow } from 'date-fns'
+import { vi } from 'date-fns/locale'
+
+// Map visibility value → Vietnamese label
+const VISIBILITY_LABEL = {
+    private: 'Riêng tư',
+    public: 'Công khai',
+}
 
 export default function DeckCard({
     name,
@@ -15,7 +22,19 @@ export default function DeckCard({
 }) {
     const lastUpdated = formatDistanceToNow(new Date(updatedAt), {
         addSuffix: true,
+        locale: vi,
     })
+
+    // Chặn event bubbling: bấm nút con không trigger onPress của card cha
+    const handleEditPress = (e) => {
+        e?.stopPropagation?.()
+        onEdit?.()
+    }
+
+    const handleStudyPress = (e) => {
+        e?.stopPropagation?.()
+        onStudy?.()
+    }
 
     return (
         <TouchableOpacity
@@ -31,10 +50,7 @@ export default function DeckCard({
                     color="#666"
                 />
                 <Text style={styles.visibilityText}>
-                    {visibility
-                        ? visibility.charAt(0).toUpperCase() +
-                          visibility.slice(1)
-                        : 'Ẩn danh'}
+                    {VISIBILITY_LABEL[visibility] || 'Ẩn danh'}
                 </Text>
 
                 <View style={styles.rightIcons}>
@@ -48,7 +64,7 @@ export default function DeckCard({
                     )}
                     <TouchableOpacity
                         style={styles.editButton}
-                        onPress={onEdit}
+                        onPress={handleEditPress}
                         activeOpacity={0.6}
                     >
                         <Ionicons name="pencil" size={18} color="#666" />
@@ -62,19 +78,19 @@ export default function DeckCard({
                     {name}
                 </Text>
                 <Text style={styles.description} numberOfLines={3}>
-                    {description || 'No description provided.'}
+                    {description || 'Chưa có mô tả.'}
                 </Text>
             </View>
 
             {/* Footer */}
             <View style={styles.footer}>
-                <Text style={styles.updatedText}>Updated {lastUpdated}</Text>
+                <Text style={styles.updatedText}>Cập nhật {lastUpdated}</Text>
                 <TouchableOpacity
                     style={styles.studyButton}
-                    onPress={onStudy}
+                    onPress={handleStudyPress}
                     activeOpacity={0.6}
                 >
-                    <Text style={styles.studyButtonText}>Study</Text>
+                    <Text style={styles.studyButtonText}>Học ngay</Text>
                 </TouchableOpacity>
             </View>
         </TouchableOpacity>

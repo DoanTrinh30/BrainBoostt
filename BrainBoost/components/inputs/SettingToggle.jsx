@@ -1,9 +1,6 @@
 import React from 'react'
 import { View, Text, Switch, StyleSheet } from 'react-native'
 
-/**
- * Toggle switch component for settings with optional "coming soon" label
- */
 const SettingToggle = ({
     label,
     value,
@@ -16,7 +13,7 @@ const SettingToggle = ({
             <View style={styles.labelContainer}>
                 <Text style={styles.label}>{label}</Text>
                 {comingSoon && (
-                    <Text style={styles.comingSoonLabel}>Coming Soon</Text>
+                    <Text style={styles.comingSoonLabel}>Sắp ra mắt</Text>
                 )}
             </View>
             <Switch
@@ -42,14 +39,8 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#F2F2F7',
     },
-    labelContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    label: {
-        fontSize: 16,
-        color: '#333333',
-    },
+    labelContainer: { flexDirection: 'row', alignItems: 'center' },
+    label: { fontSize: 16, color: '#333333' },
     comingSoonLabel: {
         fontSize: 10,
         color: '#FF9500',
