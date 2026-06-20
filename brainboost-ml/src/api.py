@@ -19,8 +19,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 # ============= CONFIG =============
-MODEL_DIR = Path('../models')
-DEFAULT_DATASET = 'duolingo'  # 'duolingo' hoặc 'synthetic'
+SCRIPT_DIR = Path(__file__).parent.parent  # From src/ to project root
+MODEL_DIR = SCRIPT_DIR / 'models'
+DEFAULT_DATASET = 'duolingo'
 
 # ============= LOAD MODELS =============
 class ModelManager:

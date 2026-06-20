@@ -23,7 +23,7 @@
       "recall": 0.8629981024667932,
       "f1": 0.8594104308390023,
       "roc_auc": 0.9635954607466499,
-      "training_time_sec": 0.03
+      "training_time_sec": 0.12
     },
     "RandomForest": {
       "accuracy": 0.9015684153596538,
@@ -31,7 +31,7 @@
       "recall": 0.8580645161290322,
       "f1": 0.8613333333333333,
       "roc_auc": 0.9643861195107147,
-      "training_time_sec": 0.42
+      "training_time_sec": 0.96
     },
     "GradientBoosting": {
       "accuracy": 0.9073823688480259,
@@ -39,7 +39,7 @@
       "recall": 0.8743833017077799,
       "f1": 0.8705837899112034,
       "roc_auc": 0.971106559582184,
-      "training_time_sec": 5.17
+      "training_time_sec": 10.17
     }
   },
   "confusion_matrices": {

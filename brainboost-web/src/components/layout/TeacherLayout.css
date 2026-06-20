@@ -1,0 +1,28 @@
+.teacher-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+.teacher-content {
+  margin-left: 240px;
+  margin-top: 72px;
+  flex: 1;
+  padding: 32px;
+  max-width: 1440px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1024px) {
+  .teacher-content {
+    margin-left: 0;
+    padding: 24px;        /* ← TABLET: 24px */
+  }
+}
+
+@media (max-width: 768px) {
+  .teacher-content {
+    padding: 16px;        /* ← MOBILE: 16px */
+  }
+}
