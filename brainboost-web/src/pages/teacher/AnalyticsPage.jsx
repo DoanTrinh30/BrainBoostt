@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { analyticsService } from '../../services/analyticsService'
 import './AnalyticsPage.css'
 
 function PerformanceRow({ className, excellent, good, average, poor }) {
@@ -15,15 +16,48 @@ function PerformanceRow({ className, excellent, good, average, poor }) {
 
 export default function AnalyticsPage() {
   const [period, setPeriod] = useState('month')
+  const [stats, setStats] = useState(null)
+  const [insights, setInsights] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    fetchAnalyticsData()
+  }, [])
+
+  const fetchAnalyticsData = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+
+      const [statsData, insightsData] = await Promise.all([
+        analyticsService.getStats(),
+        analyticsService.getInsights()
+      ])
+
+      setStats(statsData)
+      setInsights(insightsData)
+    } catch (err) {
+      console.error('Error fetching analytics:', err)
+      setError('Không thể tải dữ liệu phân tích')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (loading) return <div className="analytics-page"><p>⏳ Đang tải...</p></div>
+  if (error) return <div className="analytics-page"><p style={{color: 'red'}}>❌ {error}</p></div>
 
   return (
     <div className="analytics-page">
+
       {/* Header */}
       <div className="page-header">
         <div className="header-content">
           <h1 className="page-title">Phân Tích</h1>
           <p className="page-subtitle">Phân tích chi tiết hiệu suất học tập</p>
         </div>
+
         <select 
           value={period} 
           onChange={(e) => setPeriod(e.target.value)}
@@ -39,25 +73,29 @@ export default function AnalyticsPage() {
       <div className="kpi-grid">
         <div className="kpi-card">
           <p className="kpi-label">📚 Tổng Bài Học</p>
-          <h3 className="kpi-value">2,450</h3>
+          <h3 className="kpi-value">{stats?.totalLessons || '0'}</h3>
         </div>
+
         <div className="kpi-card">
           <p className="kpi-label">🎯 Độ Chính Xác TB</p>
-          <h3 className="kpi-value">86.5%</h3>
+          <h3 className="kpi-value">{stats?.averageAccuracy || '0'}%</h3>
         </div>
+
         <div className="kpi-card">
           <p className="kpi-label">⏱️ Thời Gian TB</p>
-          <h3 className="kpi-value">45 phút</h3>
+          <h3 className="kpi-value">{stats?.averageTime || '0'} phút</h3>
         </div>
+
         <div className="kpi-card">
           <p className="kpi-label">📈 Tiến Độ TB</p>
-          <h3 className="kpi-value">72%</h3>
+          <h3 className="kpi-value">{stats?.averageProgress || '0'}%</h3>
         </div>
       </div>
 
       {/* Performance Table */}
       <div className="card">
         <h3 className="section-title">📊 Hiệu Suất Theo Lớp</h3>
+
         <div className="table-container">
           <table className="performance-table">
             <thead>
@@ -69,14 +107,37 @@ export default function AnalyticsPage() {
                 <th>Cần Cải Thiện (0-70%)</th>
               </tr>
             </thead>
+
             <tbody>
-              <PerformanceRow className="Anh 10A" excellent={40} good={35} average={20} poor={5} />
-              <PerformanceRow className="Toán 10B" excellent={25} good={45} average={25} poor={5} />
-              <PerformanceRow className="Hóa 11" excellent={50} good={30} average={15} poor={5} />
+              {insights?.classPerformance?.map((perf, idx) => (
+                <PerformanceRow 
+                  key={idx}
+                  className={perf.className}
+                  excellent={perf.excellent}
+                  good={perf.good}
+                  average={perf.average}
+                  poor={perf.poor}
+                />
+              )) || (
+                <tr>
+                  <td colSpan="5" style={{textAlign: 'center'}}>
+                    Không có dữ liệu
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
       </div>
+
+      {/* AI Insights */}
+      {insights?.recommendation && (
+        <div className="card" style={{marginTop: '20px'}}>
+          <h3 className="section-title">🤖 Gợi Ý AI</h3>
+          <p>{insights.recommendation}</p>
+        </div>
+      )}
+
     </div>
   )
 }

@@ -33,11 +33,11 @@ export default function ClassesPage() {
 
   const classes = [
     { name: 'Lớp Tiếng Anh 10A', students: 35, status: 'active', progress: 85, lastActivity: '2 giờ trước' },
-    { name: 'Lớp Toán 10B', students: 30, status: 'active', progress: 72, lastActivity: '4 giờ trước' },
-    { name: 'Lớp Hóa 11', students: 28, status: 'active', progress: 95, lastActivity: '1 giờ trước' },
-    { name: 'Lớp Vật Lý 11A', students: 32, status: 'inactive', progress: 45, lastActivity: '3 ngày trước' },
-    { name: 'Lớp Sinh 12', students: 25, status: 'active', progress: 88, lastActivity: 'Hôm nay' },
-    { name: 'Lớp Anh Văn 12', students: 30, status: 'active', progress: 80, lastActivity: '5 giờ trước' },
+    { name: 'Lớp Tiếng Anh 10B', students: 30, status: 'active', progress: 72, lastActivity: '4 giờ trước' },
+    { name: 'Lớp Tiếng Trung A', students: 28, status: 'active', progress: 95, lastActivity: '1 giờ trước' },
+    { name: 'Lớp Tiếng Anh 11A', students: 32, status: 'inactive', progress: 45, lastActivity: '3 ngày trước' },
+    { name: 'Lớp Tiếng Trung B', students: 25, status: 'active', progress: 88, lastActivity: 'Hôm nay' },
+    { name: 'Lớp Tiếng Anh 11B', students: 30, status: 'active', progress: 80, lastActivity: '5 giờ trước' },
   ]
 
   const filteredClasses = classes.filter(c =>

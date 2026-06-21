@@ -1,28 +1,38 @@
 .teacher-layout {
   display: flex;
   min-height: 100vh;
-  background: #f8fafc;
+  background: #f0f4f8;
+}
+
+.teacher-sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 240px;
+  height: 100vh;
+  background: white;
+  z-index: 100;
 }
 
 .teacher-content {
   margin-left: 240px;
   margin-top: 72px;
   flex: 1;
-  padding: 32px;
-  max-width: 1440px;
-  width: 100%;
+  padding: 24px 32px;
+  background: #f0f4f8;
   box-sizing: border-box;
 }
 
 @media (max-width: 1024px) {
   .teacher-content {
     margin-left: 0;
-    padding: 24px;        /* ← TABLET: 24px */
+    padding: 20px 24px;
   }
 }
 
 @media (max-width: 768px) {
   .teacher-content {
-    padding: 16px;        /* ← MOBILE: 16px */
+    padding: 16px 16px;
+    margin-top: 64px;
   }
 }

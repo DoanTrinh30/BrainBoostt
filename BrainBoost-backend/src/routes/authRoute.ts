@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { AuthController } from '../controllers/AuthController';
+import { authMiddleware, requireRole } from '../middlewares/authMiddleware';
 
 const authRouter = Router();
 const authController = new AuthController();
@@ -19,7 +20,6 @@ const authController = new AuthController();
  *             required:
  *               - email
  *               - password
- *               - confirmPassword
  *             properties:
  *               email:
  *                 type: string
@@ -29,21 +29,17 @@ const authController = new AuthController();
  *                 format: password
  *               confirmPassword:
  *                 type: string
- *                 format: password
+ *               username:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *                 enum: [student, teacher, admin]
+ *                 default: student
  *     responses:
  *       200:
  *         description: User registered successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                 token:
- *                   type: string
  *       400:
- *         description: Invalid input or user already exists
+ *         description: Invalid input
  *       500:
  *         description: Server error
  */
@@ -74,20 +70,94 @@ authRouter.post('/sign-up', authController.signUp);
  *     responses:
  *       200:
  *         description: User logged in successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                 token:
- *                   type: string
  *       400:
  *         description: Invalid credentials
+ *       403:
+ *         description: Account banned
  *       500:
  *         description: Server error
  */
 authRouter.post('/sign-in', authController.signIn);
+
+/**
+ * @swagger
+ * /auth/me:
+ *   get:
+ *     summary: Get current user profile
+ *     tags: [Auth]
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User profile
+ *       401:
+ *         description: Unauthorized
+ */
+authRouter.get('/me', authMiddleware, authController.getCurrentUser);
+
+/**
+ * @swagger
+ * /auth/change-password:
+ *   put:
+ *     summary: Change user password
+ *     tags: [Auth]
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - currentPassword
+ *               - newPassword
+ *               - confirmPassword
+ *             properties:
+ *               currentPassword:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *               confirmPassword:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Password changed
+ *       400:
+ *         description: Invalid input
+ *       401:
+ *         description: Unauthorized
+ */
+authRouter.put('/change-password', authMiddleware, authController.changePassword);
+
+/**
+ * @swagger
+ * /auth/profile:
+ *   put:
+ *     summary: Update user profile
+ *     tags: [Auth]
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               avatar_url:
+ *                 type: string
+ *               dob:
+ *                 type: string
+ *                 format: date
+ *     responses:
+ *       200:
+ *         description: Profile updated
+ *       401:
+ *         description: Unauthorized
+ */
+authRouter.put('/profile', authMiddleware, authController.updateProfile);
 
 export default authRouter;

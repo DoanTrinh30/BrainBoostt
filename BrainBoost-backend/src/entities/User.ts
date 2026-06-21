@@ -28,6 +28,14 @@ export class User {
     @Column({ type: 'text', nullable: true })
     avatar_url?: string;
 
+    // ✅ Thêm role field
+    @Column({ type: 'varchar', default: 'student' })
+    role!: string; // 'student' | 'teacher' | 'admin'
+
+    // ✅ Thêm status field
+    @Column({ type: 'varchar', default: 'active' })
+    status!: string; // 'active' | 'inactive' | 'banned'
+
     @CreateDateColumn({ name: 'created_at' })
     createdAt!: Date;
 

@@ -20,33 +20,34 @@ export default function TopBar() {
           <span className="search-icon">🔍</span>
           <input
             type="text"
-            placeholder="      Tìm kiếm học sinh, lớp, hoặc bộ thẻ..."
+            placeholder="Tìm kiếm học sinh, lớp, hoặc bộ thẻ..."
             className="search-input"
           />
         </div>
       </div>
 
       <div className="topbar-right">
-        <button className="topbar-icon">🔔</button>
+        <button className="topbar-icon" title="Thông báo">🔔</button>
 
         {/* Profile Dropdown */}
         <div className="profile-dropdown">
           <button
             className="profile-btn"
             onClick={() => setShowProfileMenu(!showProfileMenu)}
+            title={user?.username || 'User'}
           >
-            <span className="profile-name">{user?.username || 'User'}</span>
-            <span className="profile-role">Giáo viên</span>
-            <img
-              src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.id || 'user'}`}
-              alt="User"
-              className="profile-avatar"
-            />
-            <span className="dropdown-arrow">▼</span>
+            <span className="profile-avatar-icon">👤</span>
           </button>
 
           {showProfileMenu && (
             <div className="profile-menu">
+              <div className="profile-menu-header">
+                <span className="menu-user-name">{user?.username || 'User'}</span>
+                <span className="menu-user-role">Giáo viên</span>
+              </div>
+
+              <hr className="menu-divider" />
+
               <button
                 className="menu-item"
                 onClick={() => {
@@ -56,6 +57,7 @@ export default function TopBar() {
               >
                 👤 Hồ Sơ Cá Nhân
               </button>
+
               <button
                 className="menu-item"
                 onClick={() => {
@@ -65,8 +67,11 @@ export default function TopBar() {
               >
                 ⚙️ Cài Đặt
               </button>
+
               <hr className="menu-divider" />
+
               <button className="menu-item">? Trợ Giúp</button>
+
               <button
                 className="menu-item logout"
                 onClick={handleLogout}

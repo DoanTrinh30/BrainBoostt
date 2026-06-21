@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { deckService } from '../../services/deckService'
 import './DecksPage.css'
 
 function DeckCard({ category, name, cards, retention, students, updated }) {
@@ -18,13 +19,37 @@ function DeckCard({ category, name, cards, retention, students, updated }) {
 
 export default function DecksPage() {
   const [selectedCategory, setSelectedCategory] = useState('all')
+  const [decks, setDecks] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  const decks = [
-    { category: 'Ngôn Ngữ', name: 'Từ Vựng Tiếng Anh', cards: 150, retention: 85, students: 120, updated: '2 ngày trước' },
-    { category: 'Toán Học', name: 'Công Thức Hóa Học', cards: 80, retention: 92, students: 95, updated: 'Hôm nay' },
-    { category: 'Khoa Học', name: 'Sinh Học Cơ Bản', cards: 200, retention: 78, students: 110, updated: '1 tuần trước' },
-    { category: 'Y Tế', name: 'Giải Phẫu Người', cards: 250, retention: 88, students: 50, updated: '3 ngày trước' },
-  ]
+  // Gọi API khi component mount
+  useEffect(() => {
+    fetchDecks()
+  }, [])
+
+  const fetchDecks = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      const data = await deckService.getAllDecks()
+      console.log('✅ Decks loaded:', data)
+      setDecks(data || [])
+    } catch (err) {
+      console.error('❌ Error loading decks:', err)
+      setError('Không thể tải bộ thẻ. Vui lòng thử lại.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (loading) {
+    return <div className="decks-page"><p>⏳ Đang tải...</p></div>
+  }
+
+  if (error) {
+    return <div className="decks-page"><p style={{color: 'red'}}>❌ {error}</p></div>
+  }
 
   return (
     <div className="decks-page">
@@ -58,9 +83,13 @@ export default function DecksPage() {
 
       {/* Decks Grid */}
       <div className="decks-grid">
-        {decks.map((deck, idx) => (
-          <DeckCard key={idx} {...deck} />
-        ))}
+        {decks.length > 0 ? (
+          decks.map((deck) => (
+            <DeckCard key={deck.id} {...deck} />
+          ))
+        ) : (
+          <p>📭 Không có bộ thẻ nào</p>
+        )}
       </div>
     </div>
   )

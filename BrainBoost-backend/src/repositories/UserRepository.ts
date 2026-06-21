@@ -18,6 +18,18 @@ export class UserRepository extends BaseRepository<User> {
         const user = await this.findById(id);
         if (!user) return null;
         await this.update(user.id, data);
-        return this.findById(id); 
+        return this.findById(id);
+    }
+
+    // ✅ Thêm method updatePassword
+    async updatePassword(id: number, hashedPassword: string): Promise<User | null> {
+        return this.updateById(id, { password: hashedPassword } as any);
+    }
+
+    // ✅ Thêm method query (raw SQL)
+    async query(sql: string, params: any[] = []): Promise<any[]> {
+        const connection = this.repository.manager.connection;
+        const result = await connection.query(sql, params);
+        return result;
     }
 }

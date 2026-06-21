@@ -16,7 +16,7 @@ export const useAnalytics = () => {
     try {
       setLoading(true)
       setError(null)
-      
+
       // Lấy dữ liệu song song
       const [statsData, activityData, insightsData] = await Promise.all([
         analyticsService.getStats(),

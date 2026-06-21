@@ -6,21 +6,25 @@ function StudentRow({ avatar, name, email, className, progress, accuracy, status
     <tr className="student-row">
       <td className="col-student">
         <div className="student-cell">
-          <img src={avatar} alt={name} className="student-avatar" />
+          <div className="student-avatar-icon">👤</div>
           <div>
             <p className="student-name">{name}</p>
             <p className="student-email">{email}</p>
           </div>
         </div>
       </td>
+
       <td className="col-class">{className}</td>
+
       <td className="col-progress">
         <div className="progress-bar">
           <div className="progress-fill" style={{ width: `${progress}%` }}></div>
         </div>
         <span className="progress-text">{progress}%</span>
       </td>
+
       <td className="col-accuracy">{accuracy}%</td>
+
       <td className="col-status">
         <span className={`status-badge ${status}`}>
           {status === 'excellent' && '🌟 Xuất Sắc'}
@@ -37,10 +41,9 @@ export default function StudentsPage() {
   const [search, setSearch] = useState('')
 
   const students = [
-    { avatar: 'https://i.pravatar.cc/40?img=1', name: 'Nguyễn Văn A', email: 'nguyenvana@school.edu', className: 'Lớp Anh 10A', progress: 95, accuracy: 98, status: 'excellent' },
-    { avatar: 'https://i.pravatar.cc/40?img=2', name: 'Trần Thị B', email: 'tranthib@school.edu', className: 'Lớp Anh 10A', progress: 88, accuracy: 92, status: 'good' },
-    { avatar: 'https://i.pravatar.cc/40?img=3', name: 'Lê Văn C', email: 'levanc@school.edu', className: 'Lớp Toán 10B', progress: 76, accuracy: 85, status: 'average' },
-    { avatar: 'https://i.pravatar.cc/40?img=4', name: 'Phạm Thị D', email: 'phamthid@school.edu', className: 'Lớp Toán 10B', progress: 62, accuracy: 72, status: 'at-risk' },
+    { name: 'Nguyễn Văn A', email: 'nguyenvana@gmail.com', className: 'Lớp Anh 10A', progress: 95, accuracy: 98, status: 'excellent' },
+    { name: 'Huyền Trang', email: 'trang@gmail.com', className: 'Lớp Anh 10A', progress: 88, accuracy: 92, status: 'good' },
+    { name: 'Trinh', email: 'trinh@gmail.com', className: 'Lớp Toán 10B', progress: 76, accuracy: 85, status: 'average' },
   ]
 
   const filteredStudents = students.filter(s =>
